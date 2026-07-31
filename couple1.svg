@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800">
+  <rect width="100%" height="100%" fill="#1E1B4B"/>
+  <circle cx="260" cy="300" r="90" fill="#F59E0B" opacity="0.95"/>
+  <circle cx="540" cy="300" r="90" fill="#FCD34D" opacity="0.95"/>
+  <rect x="160" y="420" width="480" height="220" rx="20" fill="#0B0F19" opacity="0.6"/>
+  <text x="400" y="480" font-family="Cinzel, serif" font-size="36" fill="#F8FAFC" text-anchor="middle">Sarah &amp; Thomas</text>
+</svg>
