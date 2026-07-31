@@ -11,16 +11,22 @@ static_dir = os.path.join(base_dir, 'static')
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 CORS(app)
 
-# Configuration de la base de données
-db_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': '',
-    'database': 'invitation'
-}
-
+# Configuration sécurisée via variables d'environnement
 def get_db_connection():
-    return mysql.connector.connect(**db_config)
+    host = os.environ.get('DB_HOST', 'localhost')
+    user = os.environ.get('DB_USER', 'root')
+    password = os.environ.get('DB_PASSWORD', '')
+    database = os.environ.get('DB_NAME', 'invitation')
+    port = int(os.environ.get('DB_PORT', 3306))
+    
+    return mysql.connector.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=database,
+        port=port,
+        connect_timeout=5
+    )
 
 
 @app.route('/')
@@ -87,9 +93,9 @@ def verifiy_guest():
                 "message": "Aucun invité ne correspond aux infos saisies. Veuillez contacter l'administrateur."
             }), 404
 
-    except mysql.connector.Error as err:
-        print(f"Erreur MySQL : {err}")
-        return jsonify({"success": False, "message": "Erreur de connexion à la base de données"}), 500
+    except Exception as err:
+        print(f"Erreur DB / Serveur : {err}")
+        return jsonify({"success": False, "message": "Connexion à la base de données temporairement indisponible."}), 500
 
 
 if __name__ == '__main__':
