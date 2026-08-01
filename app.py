@@ -152,6 +152,7 @@ def admin_add_guest():
     table_assignee = data.get('table_assignee')
     if table_assignee == "":
         table_assignee = None
+    secret_code = (data.get('secret_code') or '').strip().upper() or None
     nombre_places = int(data.get('nombre_places', 1))
     a_confirme = bool(data.get('a_confirme', False))
     statut = data.get('statut', 'Invité')
@@ -164,10 +165,10 @@ def admin_add_guest():
         cursor = conn.cursor()
 
         insert_query = (
-            "INSERT INTO guests (nom, postnom, prenom, telephone, table_assignee, nombre_places, a_confirme, statut)"
-            " VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+            "INSERT INTO guests (nom, postnom, prenom, telephone, table_assignee, nombre_places, a_confirme, statut, secret_code)"
+            " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
         )
-        cursor.execute(insert_query, (nom, postnom, prenom, telephone, table_assignee, nombre_places, a_confirme, statut))
+        cursor.execute(insert_query, (nom, postnom, prenom, telephone, table_assignee, nombre_places, a_confirme, statut, secret_code))
         conn.commit()
         cursor.close()
         conn.close()
@@ -188,10 +189,14 @@ def admin_update_guest():
 
     fields = []
     params = []
-    for key in ['nom', 'postnom', 'prenom', 'telephone', 'table_assignee', 'nombre_places', 'a_confirme', 'statut']:
+    for key in ['nom', 'postnom', 'prenom', 'telephone', 'table_assignee', 'nombre_places', 'a_confirme', 'statut', 'secret_code']:
         if key in data:
-            fields.append(f"{key} = %s")
-            params.append(data[key])
+            if key == 'secret_code':
+                fields.append(f"{key} = %s")
+                params.append((data[key] or '').strip().upper())
+            else:
+                fields.append(f"{key} = %s")
+                params.append(data[key])
     if not fields:
         return jsonify({"success": False, "message": "Aucune donnée à mettre à jour."}), 400
 
@@ -448,12 +453,32 @@ def verify_secret_code():
     code = (data.get('code') or '').strip().upper()
     if not code:
         return jsonify({"success": False, "message": "Veuillez saisir le code secret."}), 400
-        
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM guests WHERE UPPER(secret_code) = %s", (code,))
+        guest = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        if guest:
+            return jsonify({"success": True, "message": "Code secret valide ! Bienvenue.", "guest": {
+                "nom": guest['nom'],
+                "postnom": guest['postnom'],
+                "prenom": guest['prenom'],
+                "table": guest['table_assignee'],
+                "place": guest['nombre_places'],
+                "statut": guest['statut']
+            }}), 200
+    except Exception as err:
+        print(f"Erreur vérification code secret : {err}")
+
     valid_codes = ['2026', 'VIP2026', 'SARAH2026', 'MARIAGE2026', 'LOVE2026', 'INVITE2026', 'VIP', 'MARIAGE']
     env_code = os.environ.get('SECRET_INVITE_CODE', '').strip().upper()
     if env_code:
         valid_codes.append(env_code)
-    
+
     if code in valid_codes:
         return jsonify({"success": True, "message": "Code secret valide ! Bienvenue."}), 200
     else:
@@ -494,6 +519,18 @@ def handle_public_wishes():
         return jsonify({"success": False, "message": "Erreur lors de la publication du vœu."}), 500
 
 
+def ensure_db_schema():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("ALTER TABLE guests ADD COLUMN IF NOT EXISTS secret_code VARCHAR(255)")
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as err:
+        print(f"Erreur de migration de schéma : {err}")
+
 if __name__ == '__main__':
+    ensure_db_schema()
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
