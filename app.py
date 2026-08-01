@@ -3,12 +3,9 @@ from flask import Flask, request, render_template, jsonify
 from flask_cors import CORS
 import mysql.connector
 
-# Chemin absolu vers les dossiers template et static
+# Configuration de Flask avec template a la racine
 base_dir = os.path.abspath(os.path.dirname(__file__))
-template_dir = os.path.join(base_dir, 'template')
-static_dir = os.path.join(base_dir, 'static')
-
-app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
+app = Flask(__name__, template_folder=base_dir, static_folder=base_dir)
 CORS(app)
 
 # Configuration sécurisée via variables d'environnement
