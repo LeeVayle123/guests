@@ -9,6 +9,8 @@ CREATE TABLE IF NOT EXISTS guests (
   nombre_places INT DEFAULT 1,
   a_confirme BOOLEAN DEFAULT FALSE,
   statut VARCHAR(100),
+  secret_code VARCHAR(255),
+  secret_used BOOLEAN DEFAULT FALSE,
   INDEX idx_guests_table (table_assignee)
 );
 

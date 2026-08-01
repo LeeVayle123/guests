@@ -651,7 +651,11 @@
 
               <div id="guestFormResult" style="margin-top:6px; font-size:13px; text-align:center; font-weight:600;"></div>
 
-              <div class="modal-actions">
+              <div class="modal-actions" style="align-items:center; gap:12px;">
+                <div style="flex:1; min-width:180px;">
+                  <label style="font-size:12px; color:#334155; display:block; margin-bottom:4px;">Code secret</label>
+                  <input class="reg-input" id="secret_code" placeholder="Ex: VIP2026" style="width:100%;" />
+                </div>
                 <button type="button" class="btn btn-secondary" onclick="closeGuestForm()">Annuler</button>
                 <button type="button" class="btn btn-primary" id="btnSaveGuest">Enregistrer</button>
               </div>
@@ -690,12 +694,13 @@
                   <th>Table</th>
                   <th>Places</th>
                   <th>Type</th>
+                  <th>Code secret</th>
                   <th>Statut Confirmation</th>
                   <th style="text-align:right">Actions</th>
                 </tr>
               </thead>
               <tbody id="guestsTableBody">
-                <tr><td colspan="7" style="text-align:center; color:var(--muted)">Chargement des invités...</td></tr>
+                <tr><td colspan="8" style="text-align:center; color:var(--muted)">Chargement des invités...</td></tr>
               </tbody>
             </table>
           </div>
@@ -936,6 +941,7 @@
       document.getElementById('postnom').value = '';
       document.getElementById('prenom').value = '';
       document.getElementById('telephone').value = '';
+      document.getElementById('secret_code').value = '';
       document.getElementById('table_assignee').value = '';
       document.getElementById('nombre_places').value = 1;
       document.getElementById('btnSaveGuest').innerText = "Enregistrer";
@@ -967,6 +973,7 @@
         postnom: document.getElementById('postnom').value.trim(),
         prenom: prenom,
         telephone: document.getElementById('telephone').value.trim(),
+        secret_code: document.getElementById('secret_code').value.trim().toUpperCase() || null,
         table_assignee: document.getElementById('table_assignee').value || null,
         nombre_places: document.getElementById('nombre_places').value || (typeInvite === 'couple' ? 2 : 1),
         statut: typeInvite === 'couple' ? 'Couple' : 'Seul(e)'
@@ -1124,6 +1131,7 @@
           <td>${g.table_assignee ? `<span class="badge badge-info">${g.table_assignee}</span>` : '<span style="color:var(--muted)">Non assignée</span>'}</td>
           <td><strong>${g.nombre_places || 1}</strong></td>
           <td><span class="badge badge-info">${g.statut || 'Seul(e)'}</span></td>
+          <td>${g.secret_code ? `<strong>${g.secret_code}</strong> ${g.secret_used ? '<span class="badge badge-success">Utilisé</span>' : '<span class="badge badge-warning">Actif</span>'}` : '<span style="color:var(--muted)">-</span>'}</td>
           <td>${statusBadge}</td>
           <td style="text-align:right">
             <button class="btn btn-secondary btn-sm" onclick="editGuestById(${g.id})">${svgEdit} Éditer</button>

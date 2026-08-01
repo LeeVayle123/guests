@@ -459,15 +459,14 @@ def verify_secret_code():
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM guests WHERE UPPER(secret_code) = %s", (code,))
         guest = cursor.fetchone()
-        cursor.close()
-        conn.close()
 
         if guest:
             if guest.get('secret_used'):
+                cursor.close()
+                conn.close()
                 return jsonify({"success": False, "message": "Ce code secret a déjà été utilisé."}), 401
 
             update_query = "UPDATE guests SET secret_used = TRUE WHERE id = %s"
-            cursor = conn.cursor()
             cursor.execute(update_query, (guest['id'],))
             conn.commit()
             cursor.close()
@@ -481,6 +480,9 @@ def verify_secret_code():
                 "place": guest['nombre_places'],
                 "statut": guest['statut']
             }}), 200
+            
+        cursor.close()
+        conn.close()
     except Exception as err:
         print(f"Erreur vérification code secret : {err}")
 
