@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Login</title>
+  <style>
+    body{display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:Arial,Helvetica,sans-serif;background:#f3f6ff}
+    .box{background:#fff;padding:28px;border-radius:10px;box-shadow:0 8px 24px rgba(11,75,214,0.06);width:320px}
+    input{width:100%;padding:10px;margin-top:8px;border-radius:8px;border:1px solid #e6e9fb}
+    button{width:100%;padding:10px;margin-top:12px;border-radius:8px;border:none;background:#0b4bd6;color:#fff}
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>Connexion Admin</h2>
+    <form method="post">
+      <input type="text" name="username" placeholder="Nom d'utilisateur" value="admin">
+      <input type="password" name="password" placeholder="Mot de passe" value="admin123">
+      <button type="submit">Se connecter</button>
+    </form>
+    {% if error %}<div style="color:#c0392b;margin-top:8px">{{ error }}</div>{% endif %}
+  </div>
+</body>
+</html>

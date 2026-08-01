@@ -42,6 +42,201 @@
             line-height: 1.6;
         }
 
+        /* --- ENVELOPE LANDING GATE & 3D ANIMATION --- */
+        .envelope-gate-container {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: radial-gradient(circle at center, #0f172a 0%, #030509 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s ease;
+        }
+
+        .envelope-gate-container.unlocked {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .envelope-content-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            max-width: 520px;
+            width: 100%;
+        }
+
+        .envelope-3d-wrapper {
+            position: relative;
+            width: 320px;
+            height: 220px;
+            margin-top: 20px;
+            perspective: 1000px;
+            cursor: pointer;
+            transition: transform 0.4s ease;
+        }
+
+        .envelope-3d-wrapper:hover {
+            transform: scale(1.03);
+        }
+
+        .env-back {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 12px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 35px rgba(245, 158, 11, 0.25);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .env-letter {
+            position: absolute;
+            bottom: 10px;
+            left: 20px;
+            right: 20px;
+            height: 190px;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-radius: 8px;
+            padding: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 2;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(0);
+        }
+
+        .envelope-3d-wrapper.opened .env-letter {
+            transform: translateY(-90px);
+        }
+
+        .env-letter-content {
+            border: 1px dashed #d97706;
+            height: 100%;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #78350f;
+            padding: 10px;
+        }
+
+        .env-front-left {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-top: 110px solid transparent;
+            border-bottom: 110px solid transparent;
+            border-left: 160px solid #172033;
+            z-index: 3;
+            filter: drop-shadow(2px 0 4px rgba(0,0,0,0.3));
+        }
+
+        .env-front-right {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-top: 110px solid transparent;
+            border-bottom: 110px solid transparent;
+            border-right: 160px solid #1e293b;
+            z-index: 3;
+            filter: drop-shadow(-2px 0 4px rgba(0,0,0,0.3));
+        }
+
+        .env-front-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-bottom: 120px solid #0f172a;
+            z-index: 4;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .env-top-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-top: 130px solid #283654;
+            z-index: 5;
+            transform-origin: top center;
+            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+        }
+
+        .envelope-3d-wrapper.opened .env-top-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .wax-seal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -40%);
+            width: 65px;
+            height: 65px;
+            background: radial-gradient(circle at 30% 30%, #f59e0b 0%, #b45309 70%, #78350f 100%);
+            border-radius: 50%;
+            z-index: 6;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.6), 0 0 18px rgba(245, 158, 11, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .wax-seal-inner {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 1px dashed rgba(255,255,255,0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wax-lock-icon {
+            font-size: 0.75rem;
+            color: var(--gold-light);
+            margin-top: 2px;
+        }
+
+        .wax-seal-pulse {
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 2px solid var(--gold-main);
+            animation: sealPulse 2s infinite;
+            opacity: 0;
+        }
+
+        @keyframes sealPulse {
+            0% { transform: scale(0.9); opacity: 0.85; }
+            100% { transform: scale(1.35); opacity: 0; }
+        }
+
+        .envelope-3d-wrapper.opened .wax-seal {
+            opacity: 0;
+            transform: translate(-50%, -40%) scale(0.4);
+        }
+
         /* --- PARTICULES & CŒURS VOLANTS EN ARRIÈRE-PLAN --- */
         #hearts-container {
             position: fixed;
@@ -120,7 +315,9 @@
             border-radius: 2px;
         }
         .divider::after {
-            content: '❤';
+            content: "\f004";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
             position: absolute;
             top: 50%;
             left: 50%;
@@ -403,6 +600,85 @@
 </head>
 <body>
 
+    <!-- ENVELOPE LANDING GATE OVERLAY -->
+    <div id="envelope-gate" class="envelope-gate-container">
+        <div class="envelope-content-box">
+            <div style="margin-bottom: 15px;">
+                <span style="font-size: 0.85rem; letter-spacing: 5px; text-transform: uppercase; color: var(--gold-main); font-weight: 600;">
+                    <i class="fa-solid fa-crown" style="margin-right: 6px;"></i> Invitation Officielle de Mariage <i class="fa-solid fa-crown" style="margin-left: 6px;"></i>
+                </span>
+                <h1 class="font-script" style="font-size: clamp(3.2rem, 9vw, 5.5rem); margin-top: 5px; margin-bottom: 0;">Sarah &amp; Thomas</h1>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 6px;">Cliquez sur le sceau de cire doré pour déverrouiller votre enveloppe d'invitation.</p>
+            </div>
+
+            <!-- 3D ENVELOPE ARTWORK -->
+            <div class="envelope-3d-wrapper" id="envelope3D" onclick="promptSecretCode()">
+                <!-- BACK OF ENVELOPE -->
+                <div class="env-back"></div>
+                
+                <!-- LETTER INSIDE THAT SLIDES OUT -->
+                <div class="env-letter" id="envLetter">
+                    <div class="env-letter-content">
+                        <i class="fa-solid fa-gem" style="color: var(--gold-main); font-size: 1.6rem;"></i>
+                        <h2 class="font-serif" style="color: #78350f; font-size: 1.25rem; margin-top: 6px; font-weight: 700;">Invitation VIP</h2>
+                        <p style="font-size: 0.8rem; color: #92400e; margin-top: 4px;">Nous avons l'honneur de vous convier à notre union.</p>
+                        <div style="font-family: 'Alex Brush', cursive; font-size: 2rem; color: #b45309; margin-top: 6px;">12 Septembre 2026</div>
+                    </div>
+                </div>
+
+                <!-- FRONT FLAPS OF ENVELOPE -->
+                <div class="env-front-left"></div>
+                <div class="env-front-right"></div>
+                <div class="env-front-bottom"></div>
+                
+                <!-- TOP FLAP THAT OPENS IN 3D -->
+                <div class="env-top-flap" id="envTopFlap"></div>
+
+                <!-- GOLDEN WAX SEAL IN CENTER -->
+                <div class="wax-seal" id="waxSeal">
+                    <div class="wax-seal-inner">
+                        <span style="font-family: 'Cinzel Decorative', serif; font-size: 1.05rem; font-weight: 700; color: #fff;">S &amp; T</span>
+                        <i class="fa-solid fa-lock wax-lock-icon"></i>
+                    </div>
+                    <div class="wax-seal-pulse"></div>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <button class="btn-gold" onclick="promptSecretCode()" style="padding: 12px 28px; font-size: 0.95rem;">
+                    <i class="fa-solid fa-key" style="margin-right: 8px;"></i> Saisir le Code Secret d'Invitation
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECRET CODE PROMPT MODAL -->
+    <div class="modal-overlay" id="codeModal" style="z-index: 10001;">
+        <div class="modal-content" style="max-width: 440px;">
+            <span class="close-btn" onclick="closeCodeModal()">&times;</span>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(245, 158, 11, 0.15); border: 1px solid var(--gold-main); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+                    <i class="fa-solid fa-shield-halved" style="font-size: 1.8rem; color: var(--gold-main);"></i>
+                </div>
+                <h3 class="font-serif" style="font-size: 1.6rem; color: var(--gold-light);">Accès Sécurisé</h3>
+                <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 4px;">Saisissez le code secret envoyé par l'administrateur pour ouvrir votre enveloppe.</p>
+            </div>
+
+            <form id="codeForm" onsubmit="validerCodeSecret(event)">
+                <div class="form-group">
+                    <label><i class="fa-solid fa-key" style="margin-right: 8px; color: var(--gold-main);"></i>Code Secret</label>
+                    <input type="text" id="secretCodeInput" class="form-control" placeholder="ex: VIP2026" style="text-align: center; font-size: 1.2rem; letter-spacing: 3px; font-weight: 700; text-transform: uppercase;" required>
+                </div>
+
+                <div id="codeErrorBox" style="display: none; color: #fb7185; font-size: 0.85rem; text-align: center; margin-bottom: 15px; font-weight: 600;"></div>
+
+                <button type="submit" id="btnCheckCode" class="btn-gold" style="width: 100%; justify-content: center; padding: 14px;">
+                    <i class="fa-solid fa-envelope-open-text"></i> Déverrouiller l'Enveloppe
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- PARTICULES DE CŒURS DORÉS VOLANTS -->
     <div id="hearts-container"></div>
 
@@ -547,6 +823,47 @@
         </div>
     </div>
 
+    <!-- 6. SECTION LIVRE D'OR / SOUHAITS -->
+    <section id="livre-dor" class="reveal">
+        <div class="section-tag"><i class="fa-solid fa-crown"></i> Livre d'Or &amp; Vœux <i class="fa-solid fa-crown"></i></div>
+        <h2 class="section-title">Souhaits des Invités</h2>
+        <div class="divider"></div>
+        <p style="color: var(--text-muted); max-width: 600px; margin-bottom: 40px; font-size: 1rem;">
+            Laissez une bénédiction, un mot doux ou un précieux souvenir pour célébrer notre union.
+        </p>
+
+        <!-- FORMULAIRE SOUHAIT -->
+        <div style="width: 100%; max-width: 680px; background: var(--bg-card); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); padding: 35px; border-radius: 24px; box-shadow: var(--glass-shadow); margin-bottom: 50px; text-align: left;">
+            <h3 class="font-serif" style="color: var(--gold-light); font-size: 1.4rem; margin-bottom: 20px; text-align: center;">
+                <i class="fa-solid fa-feather-pointed" style="color: var(--gold-main); margin-right: 8px;"></i> Écrire dans le Livre d'Or
+            </h3>
+            
+            <form id="wishForm" onsubmit="publierSouhait(event)">
+                <div class="form-group">
+                    <label><i class="fa-solid fa-user" style="margin-right: 8px; color: var(--gold-main);"></i>Votre Nom complet</label>
+                    <input type="text" id="wish_guest_name" class="form-control" placeholder="ex: Famille KABAMBA ou Jean &amp; Marie" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-solid fa-comment-dots" style="margin-right: 8px; color: var(--gold-main);"></i>Votre message ou vœu</label>
+                    <textarea id="wish_content" class="form-control" rows="4" placeholder="Écrivez vos vœux les plus chaleureux pour les mariés..." required style="resize: vertical;"></textarea>
+                </div>
+
+                <div id="wishMsgBox" style="display: none; margin-bottom: 15px; font-size: 0.9rem; text-align: center; font-weight: 600;"></div>
+
+                <button type="submit" id="btnPostWish" class="btn-gold" style="width: 100%; justify-content: center; padding: 14px;">
+                    <i class="fa-solid fa-paper-plane" style="margin-right: 8px;"></i> Publier mon Vœu
+                </button>
+            </form>
+        </div>
+
+        <!-- LISTE DYNAMIQUE DES SOUHAITS -->
+        <div style="width: 100%; max-width: 900px;">
+            <div id="wishesGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+                <div style="grid-column: 1/-1; color: var(--text-muted); font-size: 0.95rem;">Chargement des vœux du Livre d'Or...</div>
+            </div>
+        </div>
+    </section>
+
     <!-- FOOTER -->
     <footer>
         <p class="font-script" style="font-size: 2.4rem; margin-bottom: 8px;">Sarah &amp; Thomas</p>
@@ -650,27 +967,27 @@
                 if (response.ok && data.success) {
                     resultBox.className = "result-box success";
                     resultBox.innerHTML = `
-                        <h3 class="font-serif" style="color:#34D399; font-size:1.5rem;">🎉 Accès VIP Confirmé</h3>
+                        <h3 class="font-serif" style="color:#34D399; font-size:1.5rem;"><i class="fa-solid fa-circle-check" style="color:#34D399; margin-right:8px;"></i> Accès VIP Confirmé</h3>
                         <p style="margin-top:10px; font-size:1.05rem;">Enchanté(e) <strong>${data.guest.prenom} ${data.guest.nom}</strong> ! Votre place est réservée.</p>
                         <hr style="border-color: rgba(255,255,255,0.15); margin: 18px 0;">
-                        <p style="font-size:1.05rem;">📍 Table attribuée : <strong>${data.guest.table}</strong></p>
-                        <p style="font-size:1.05rem;">🎟️ Places réservées : <strong>${data.guest.place}</strong></p>
+                        <p style="font-size:1.05rem;"><i class="fa-solid fa-map-pin" style="margin-right:8px;"></i> Table attribuée : <strong>${data.guest.table}</strong></p>
+                        <p style="font-size:1.05rem;"><i class="fa-solid fa-ticket-simple" style="margin-right:8px;"></i> Places réservées : <strong>${data.guest.place}</strong></p>
                     `;
                 } else {
                     resultBox.className = "result-box error";
                     resultBox.innerHTML = `
-                        <h3 class="font-serif" style="color:#FB7185; font-size:1.4rem;">❌ Accès Non Trouvé</h3>
+                        <h3 class="font-serif" style="color:#FB7185; font-size:1.4rem;"><i class="fa-solid fa-xmark" style="margin-right:8px;"></i> Accès Non Trouvé</h3>
                         <p style="margin-top:10px; font-size:0.95rem;">${data.message}</p>
                         <button class="btn-gold" style="padding: 12px 30px; font-size:0.9rem; margin-top:20px;" onclick="closeModal()">Réessayer</button>
                     `;
                 }
-            } catch (error) {
+                } catch (error) {
                 console.error("Erreur serveur :", error);
                 form.style.display = 'none';
                 resultBox.style.display = 'block';
                 resultBox.className = "result-box error";
-                resultBox.innerHTML = `
-                    <h3 class="font-serif" style="color:#FB7185; font-size:1.4rem;">⚠️ Erreur de connexion</h3>
+                    resultBox.innerHTML = `
+                    <h3 class="font-serif" style="color:#FB7185; font-size:1.4rem;"><i class="fa-solid fa-triangle-exclamation" style="margin-right:8px;"></i> Erreur de connexion</h3>
                     <p style="margin-top:10px; font-size:0.95rem;">Impossible de se connecter au serveur backend.</p>
                     <button class="btn-gold" style="padding: 12px 30px; font-size:0.9rem; margin-top:20px;" onclick="closeModal()">Réessayer</button>
                 `;
@@ -679,6 +996,157 @@
                 btnSubmit.disabled = false;
             }
         }
+        // Gestion de l'Enveloppe & Code Secret
+        function promptSecretCode() {
+            document.getElementById('codeModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('secretCodeInput').focus();
+        }
+
+        function closeCodeModal() {
+            document.getElementById('codeModal').classList.remove('active');
+            document.body.style.overflow = '';
+            document.getElementById('codeErrorBox').style.display = 'none';
+        }
+
+        async function validerCodeSecret(event) {
+            event.preventDefault();
+            const codeInput = document.getElementById('secretCodeInput').value;
+            const btnCheck = document.getElementById('btnCheckCode');
+            const errBox = document.getElementById('codeErrorBox');
+
+            btnCheck.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Validation...`;
+            btnCheck.disabled = true;
+            errBox.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/verify-code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: codeInput })
+                });
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    closeCodeModal();
+                    // Animation ouverture 3D enveloppe
+                    const env3D = document.getElementById('envelope3D');
+                    env3D.classList.add('opened');
+
+                    setTimeout(() => {
+                        const gate = document.getElementById('envelope-gate');
+                        gate.classList.add('unlocked');
+                        sessionStorage.setItem('invitationUnlocked', 'true');
+                    }, 1200);
+                } else {
+                    errBox.style.display = 'block';
+                    errBox.innerText = data.message || "Code secret incorrect.";
+                }
+            } catch (err) {
+                console.error(err);
+                errBox.style.display = 'block';
+                errBox.innerText = "Erreur réseau. Veuillez réessayer.";
+            } finally {
+                btnCheck.innerHTML = `<i class="fa-solid fa-envelope-open-text"></i> Déverrouiller l'Enveloppe`;
+                btnCheck.disabled = false;
+            }
+        }
+
+        // Charger les vœux du Livre d'Or
+        async function loadPublicWishes() {
+            const grid = document.getElementById('wishesGrid');
+            if (!grid) return;
+
+            try {
+                const res = await fetch('/api/wishes');
+                const data = await res.json();
+
+                if (data.success && data.wishes && data.wishes.length > 0) {
+                    grid.innerHTML = '';
+                    data.wishes.forEach(w => {
+                        const dateStr = w.created_at ? new Date(w.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+                        const card = document.createElement('div');
+                        card.style.cssText = `
+                            background: rgba(15, 21, 35, 0.7);
+                            backdrop-filter: blur(10px);
+                            border: 1px solid var(--glass-border);
+                            border-radius: 18px;
+                            padding: 22px;
+                            text-align: left;
+                            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: space-between;
+                        `;
+                        card.innerHTML = `
+                            <div>
+                                <i class="fa-solid fa-quote-left" style="color: var(--gold-main); font-size: 1.3rem; margin-bottom: 10px; opacity: 0.7;"></i>
+                                <p style="color: var(--text-light); font-size: 0.95rem; font-style: italic; line-height: 1.5; margin-bottom: 15px;">"${w.content}"</p>
+                            </div>
+                            <div style="border-top: 1px solid rgba(245, 158, 11, 0.15); padding-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+                                <strong style="color: var(--gold-light); font-size: 0.9rem;"><i class="fa-solid fa-user-pen" style="margin-right: 6px; color: var(--gold-main);"></i>${w.guest_name}</strong>
+                                <small style="color: var(--text-muted); font-size: 0.75rem;">${dateStr}</small>
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    });
+                } else {
+                    grid.innerHTML = `<div style="grid-column: 1/-1; color: var(--text-muted); font-size: 0.95rem;">Soyez le premier à laisser un message dans le Livre d'Or !</div>`;
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // Publier un vœu dans le Livre d'Or
+        async function publierSouhait(event) {
+            event.preventDefault();
+            const guestName = document.getElementById('wish_guest_name').value.trim();
+            const content = document.getElementById('wish_content').value.trim();
+            const btnPost = document.getElementById('btnPostWish');
+            const msgBox = document.getElementById('wishMsgBox');
+
+            btnPost.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Publication...`;
+            btnPost.disabled = true;
+            msgBox.style.display = 'none';
+
+            try {
+                const res = await fetch('/api/wishes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ guest_name: guestName, content: content })
+                });
+                const data = await res.json();
+
+                msgBox.style.display = 'block';
+                if (res.ok && data.success) {
+                    msgBox.style.color = '#34D399';
+                    msgBox.innerText = data.message;
+                    document.getElementById('wishForm').reset();
+                    loadPublicWishes();
+                } else {
+                    msgBox.style.color = '#FB7185';
+                    msgBox.innerText = data.message || "Erreur lors de la publication.";
+                }
+            } catch (err) {
+                console.error(err);
+                msgBox.style.display = 'block';
+                msgBox.style.color = '#FB7185';
+                msgBox.innerText = "Erreur de connexion au serveur.";
+            } finally {
+                btnPost.innerHTML = `<i class="fa-solid fa-paper-plane" style="margin-right: 8px;"></i> Publier mon Vœu`;
+                btnPost.disabled = false;
+            }
+        }
+
+        // Initialisation globale
+        window.addEventListener('DOMContentLoaded', () => {
+            if (sessionStorage.getItem('invitationUnlocked') === 'true') {
+                const gate = document.getElementById('envelope-gate');
+                if (gate) gate.classList.add('unlocked');
+            }
+            loadPublicWishes();
+        });
     </script>
 </body>
 </html>

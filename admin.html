@@ -1,0 +1,1397 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard Admin - Gestion des Invitations</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f6fc;
+      --card: #ffffff;
+      --muted: #64748b;
+      --navy: #000066;
+      --navy-hover: #00004d;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --accent: #4f46e5;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --sidebar: #0b1329;
+      --sidebar-accent: #172447;
+      --border: #e2e8f0;
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: #1e293b;
+      line-height: 1.5;
+    }
+    .app { display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: linear-gradient(180deg, var(--sidebar), var(--sidebar-accent));
+      color: #fff;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+      padding: 0 8px;
+    }
+    .brand .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+    .brand h2 { font-size: 18px; font-weight: 700; }
+    .brand p { font-size: 11px; color: #94a3b8; }
+
+    .nav { display: flex; flex-direction: column; gap: 6px; }
+    .nav a {
+      color: #94a3b8;
+      padding: 12px 14px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .nav a.active, .nav a:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .nav a.active {
+      background: var(--primary);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+    .nav-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+    }
+
+    .sidebar .footer {
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ef4444;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 14px;
+      border-radius: 12px;
+      transition: background 0.2s;
+    }
+    .btn-logout:hover { background: rgba(239, 68, 68, 0.1); }
+
+    /* Main Area */
+    .main { flex: 1; padding: 28px; overflow-x: hidden; }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      background: #fff;
+      padding: 16px 24px;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+    .topbar h1 { font-size: 22px; font-weight: 700; color: #0f172a; }
+    .user { display: flex; align-items: center; gap: 12px; }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    /* Grid & Cards */
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+      border: 1px solid var(--border);
+    }
+    .col-span-12 { grid-column: span 12; }
+    .col-span-6 { grid-column: span 6; }
+
+    /* Metric Cards */
+    .metrics-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .metric-card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    }
+    .metric-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .metric-icon.blue { background: #e0e7ff; color: var(--navy); }
+    .metric-icon.green { background: #d1fae5; color: #059669; }
+    .metric-icon.amber { background: #fef3c7; color: #d97706; }
+    .metric-icon.purple { background: #ede9fe; color: #7c3aed; }
+
+    .metric-data .label { font-size: 13px; color: var(--muted); font-weight: 500; }
+    .metric-data .value { font-size: 24px; font-weight: 700; color: #0f172a; margin-top: 2px; }
+
+    /* =========================================================
+       FLOATING COMPACT GUEST MODAL FORM
+       ========================================================= */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+      padding: 16px;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-card {
+      background: #ffffff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.12), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transform: translateY(15px) scale(0.96);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      max-height: 90vh;
+    }
+    .modal-overlay.active .modal-card {
+      transform: translateY(0) scale(1);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      background: #f8fafc;
+    }
+    .modal-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0;
+    }
+    .modal-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .modal-close {
+      background: transparent;
+      border: none;
+      font-size: 22px;
+      line-height: 1;
+      color: #94a3b8;
+      cursor: pointer;
+      border-radius: 8px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .modal-close:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    /* Form Fields Grid */
+    .reg-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .col-reg-4 { grid-column: span 4; }
+    .col-reg-6 { grid-column: span 6; }
+    .col-reg-12 { grid-column: span 12; }
+
+    @media (max-width: 520px) {
+      .col-reg-4, .col-reg-6 { grid-column: span 12; }
+    }
+
+    .reg-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .reg-group label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #334155;
+    }
+    .reg-input {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: #ffffff;
+      font-size: 13.5px;
+      color: #0f172a;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .reg-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    select.reg-input {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+      cursor: pointer;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13.5px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    /* Generic Buttons & Tables */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: #000066; color: #fff; }
+    .btn-primary:hover { background: #00004d; }
+    .btn-secondary { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }
+    .btn-secondary:hover { background: #e2e8f0; }
+    .btn-danger { background: #fef2f2; color: var(--danger); border: 1px solid #fecaca; }
+    .btn-danger:hover { background: #fee2e2; }
+    .btn-sm { padding: 6px 10px; font-size: 12px; border-radius: 6px; }
+
+    .table-responsive { width: 100%; overflow-x: auto; margin-top: 12px; }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 14px;
+    }
+    .data-table th {
+      background: #f8fafc;
+      padding: 12px 16px;
+      font-weight: 600;
+      color: #475569;
+      border-bottom: 2px solid var(--border);
+    }
+    .data-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    .data-table tbody tr:hover { background: #f8fafc; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge-success { background: #d1fae5; color: #065f46; }
+    .badge-warning { background: #fef3c7; color: #92400e; }
+    .badge-info { background: #e0f2fe; color: #075985; }
+
+    .filter-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      border: 1px solid var(--border);
+      padding: 9px 14px;
+      border-radius: 10px;
+      flex: 1;
+      max-width: 380px;
+    }
+    .search-box input {
+      border: none;
+      outline: none;
+      width: 100%;
+      font-size: 14px;
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { padding: 16px; }
+      .topbar { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .registration-card { flex-direction: column; }
+      .reg-sidebar-panel { width: 100%; padding: 24px; }
+      .col-reg-4, .col-reg-6 { grid-column: span 12; }
+      .reg-bottom-actions { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">EA</div>
+        <div>
+          <h2>Mariage Admin</h2>
+          <p>Gestion des invitations</p>
+        </div>
+      </div>
+
+      <nav class="nav" id="sidebarNav">
+        <a class="active" data-page="dashboard">
+          <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg></span> 
+          Tableau de bord
+        </a>
+        <a data-page="guests">
+          <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> 
+          Gestion Invités
+        </a>
+        <a data-page="confirmed">
+          <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span> 
+          Invités Confirmés
+        </a>
+        <a data-page="tables">
+          <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M6 12v7"/><path d="M18 12v7"/></svg></span> 
+          Gestion Tables
+        </a>
+        <a data-page="wishes">
+          <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span> 
+          Souhaits reçus
+        </a>
+        <a data-page="guestbook">
+          <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span> 
+          Livre d'or
+        </a>
+      </nav>
+
+      <div class="footer">
+        <a href="/logout" class="btn-logout">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Déconnexion
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <div class="topbar">
+        <h1 id="pageTitle">Tableau de bord</h1>
+        <div class="user">
+          <div style="text-align:right">
+            <div style="font-size:14px; font-weight:600">Administrateur</div>
+            <div style="font-size:12px; color:var(--muted)">Session active</div>
+          </div>
+          <div class="avatar">A</div>
+        </div>
+      </div>
+
+      <!-- PAGE: DASHBOARD -->
+      <section id="dashboard" class="page active">
+        <div class="metrics-container">
+          <div class="metric-card">
+            <div class="metric-icon blue">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="metric-data">
+              <div class="label">Total Invités</div>
+              <div class="value" id="metricTotal">0</div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon green">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div class="metric-data">
+              <div class="label">Confirmés</div>
+              <div class="value" id="metricConfirmed">0</div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon amber">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="metric-data">
+              <div class="label">En attente de l'invité</div>
+              <div class="value" id="metricPending">0</div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon purple">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3"/><path d="M5 13h14v6H5z"/><path d="M6 19v3"/><path d="M18 19v3"/></svg>
+            </div>
+            <div class="metric-data">
+              <div class="label">Places réservées</div>
+              <div class="value" id="metricPlaces">0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card col-span-12">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+              <div>
+                <h3 style="font-size:18px;">Derniers invités enregistrés</h3>
+                <p style="color:var(--muted); font-size:13px;">Aperçu des invitations enregistrées dans le système.</p>
+              </div>
+              <button class="btn btn-primary" onclick="setActivePage('guests'); openGuestForm();">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Enregistrer un invité
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Nom Complet</th>
+                    <th>Téléphone</th>
+                    <th>Table Assignée</th>
+                    <th>Places</th>
+                    <th>Statut Confirmation</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboardRecentGuests">
+                  <tr><td colspan="5" style="text-align:center; color:var(--muted)">Chargement des invités...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGE: INVITÉS -->
+      <section id="guests" class="page">
+        <!-- TOP BUTTON TOGGLE -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+          <div>
+            <h2 style="font-size:20px; font-weight:700">Gestion des Invitations</h2>
+            <p style="color:var(--muted); font-size:14px">Enregistrez un invité ou un couple pour l'invitation.</p>
+          </div>
+          <button class="btn btn-primary" id="btnToggleGuestForm">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span id="toggleText">Nouvel Invité</span>
+          </button>
+        </div>
+
+        <!-- FLOATING GUEST MODAL FORM -->
+        <div class="modal-overlay" id="guestFormPanel" onclick="if(event.target === this) closeGuestForm()">
+          <div class="modal-card">
+            <div class="modal-header">
+              <div>
+                <h3 class="modal-title" id="formTitleText">Enregistrer un invité</h3>
+                <p class="modal-subtitle">Remplissez les informations pour ajouter ou modifier un invité.</p>
+              </div>
+              <button type="button" class="modal-close" onclick="closeGuestForm()" aria-label="Fermer">&times;</button>
+            </div>
+
+            <div class="modal-body">
+              <input id="guest_id" type="hidden">
+
+              <div class="reg-grid">
+                <!-- Choice: Type d'invité (Seul(e) vs Couple) -->
+                <div class="reg-group col-reg-6">
+                  <label>Type d'invité <span style="color:red">*</span></label>
+                  <select class="reg-input" id="type_invite" onchange="handleTypeChange()">
+                    <option value="">---Sélectionner---</option>
+                    <option value="seul">Seul(e)</option>
+                    <option value="couple">Couple</option>
+                  </select>
+                </div>
+
+                <!-- Numéro de téléphone -->
+                <div class="reg-group col-reg-6">
+                  <label>Téléphone</label>
+                  <input class="reg-input" id="telephone" placeholder="Ex: +243 810 000 000">
+                </div>
+
+                <!-- Nom -->
+                <div class="reg-group col-reg-4">
+                  <label>Nom <span style="color:red">*</span></label>
+                  <input class="reg-input" id="nom" placeholder="Nom" required>
+                </div>
+
+                <!-- Postnom -->
+                <div class="reg-group col-reg-4">
+                  <label>Postnom</label>
+                  <input class="reg-input" id="postnom" placeholder="Postnom">
+                </div>
+
+                <!-- Prénom -->
+                <div class="reg-group col-reg-4">
+                  <label>Prénom <span style="color:red">*</span></label>
+                  <input class="reg-input" id="prenom" placeholder="Prénom" required>
+                </div>
+
+                <!-- Table Assignée -->
+                <div class="reg-group col-reg-6">
+                  <label>Table Assignée</label>
+                  <select class="reg-input" id="table_assignee" onchange="handleTableSelectChange(this)">
+                    <option value="">---Sélectionner---</option>
+                  </select>
+                </div>
+
+                <!-- Nombre de places -->
+                <div class="reg-group col-reg-6">
+                  <label>Nombre de places</label>
+                  <input class="reg-input" id="nombre_places" type="number" min="1" value="1">
+                </div>
+              </div>
+
+              <div id="guestFormResult" style="margin-top:6px; font-size:13px; text-align:center; font-weight:600;"></div>
+
+              <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeGuestForm()">Annuler</button>
+                <button type="button" class="btn btn-primary" id="btnSaveGuest">Enregistrer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAIN GUESTS TABLE CONTAINER -->
+        <div class="card">
+          <!-- Filter & List Header -->
+          <div class="filter-bar">
+            <div class="search-box">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" id="guestSearch" placeholder="Rechercher par nom, prénom, téléphone..." oninput="filterGuests()">
+            </div>
+            <div style="display:flex; gap:10px;">
+              <select class="reg-input" id="filterStatus" style="padding: 8px 30px 8px 12px;" onchange="filterGuests()">
+                <option value="all">Tous les statuts</option>
+                <option value="confirmed">Confirmés uniquement</option>
+                <option value="pending">En attente uniquement</option>
+              </select>
+              <button class="btn btn-secondary btn-sm" onclick="loadGuestsList()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                Rafraîchir
+              </button>
+            </div>
+          </div>
+
+          <!-- Guest Table -->
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Nom complet</th>
+                  <th>Téléphone</th>
+                  <th>Table</th>
+                  <th>Places</th>
+                  <th>Type</th>
+                  <th>Statut Confirmation</th>
+                  <th style="text-align:right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="guestsTableBody">
+                <tr><td colspan="7" style="text-align:center; color:var(--muted)">Chargement des invités...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGE: CONFIRMED -->
+      <section id="confirmed" class="page">
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <div>
+              <h2 style="font-size:20px; font-weight:700">Invités Confirmés</h2>
+              <p style="color:var(--muted); font-size:14px">Personnes ayant vous ayant confirmé leur présence via la plateforme.</p>
+            </div>
+            <button class="btn btn-secondary" id="btnRefreshConfirmed">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              Rafraîchir
+            </button>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Nom Complet</th>
+                  <th>Téléphone</th>
+                  <th>Table Assignée</th>
+                  <th>Nombre de Places</th>
+                  <th>Type</th>
+                </tr>
+              </thead>
+              <tbody id="confirmedTableBody">
+                <tr><td colspan="5" style="text-align:center; color:var(--muted)">Chargement...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGE: TABLES -->
+      <section id="tables" class="page">
+        <div class="grid">
+          <div class="card col-span-6">
+            <h3 style="margin-bottom:12px;">Créer une Table</h3>
+            <div style="display:flex; flex-direction:column; gap:12px">
+              <div class="reg-group">
+                <label>Nom de la table</label>
+                <input class="reg-input" id="table_name" placeholder="Ex: Table VIP, Table d'honneur">
+              </div>
+              <div class="reg-group">
+                <label>Capacité (Places)</label>
+                <input class="reg-input" id="table_capacity" type="number" value="8">
+              </div>
+              <div class="reg-group">
+                <label>Description</label>
+                <input class="reg-input" id="table_description" placeholder="Optionnel (ex: Proche scène)">
+              </div>
+              <button class="btn btn-primary" id="btnAddTable">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Ajouter la Table
+              </button>
+              <div id="tableFormResult" style="font-size:13px;"></div>
+            </div>
+          </div>
+
+          <div class="card col-span-6">
+            <h3 style="margin-bottom:12px;">Tables Enregistrées</h3>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Nom</th>
+                    <th>Capacité</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody id="tablesTableBody">
+                  <tr><td colspan="3" style="text-align:center; color:var(--muted)">Chargement des tables...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGE: WISHES -->
+      <section id="wishes" class="page">
+        <div class="card">
+          <h2 style="font-size:20px; margin-bottom:16px;">Souhaits des invités</h2>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Nom de l'invité</th>
+                  <th>Date</th>
+                  <th>Message</th>
+                </tr>
+              </thead>
+              <tbody id="wishesTableBody">
+                <tr><td colspan="3" style="text-align:center; color:var(--muted)">Chargement des souhaits...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGE: GUESTBOOK -->
+      <section id="guestbook" class="page">
+        <div class="card">
+          <h2 style="font-size:20px; margin-bottom:16px;">Livre d'or</h2>
+          <div style="max-width:500px; margin-bottom:24px; display:flex; flex-direction:column; gap:12px">
+            <input class="reg-input" id="wish_guest_name" placeholder="Nom de l'invité">
+            <textarea class="reg-input" id="wish_content" rows="4" placeholder="Votre message pour le livre d'or..." style="resize:vertical"></textarea>
+            <button class="btn btn-primary" id="btnAddWish">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Ajouter le message
+            </button>
+            <div id="wishFormResult" style="font-size:13px;"></div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Invité</th>
+                  <th>Date</th>
+                  <th>Message</th>
+                </tr>
+              </thead>
+              <tbody id="guestbookTableBody">
+                <tr><td colspan="3" style="text-align:center; color:var(--muted)">Chargement des messages...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    let allGuests = [];
+    let allTables = [];
+
+    // Page Switching Logic
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const navLinks = Array.from(document.querySelectorAll('.nav a'));
+
+    function setActivePage(pageId) {
+      pages.forEach(section => {
+        section.classList.toggle('active', section.id === pageId);
+      });
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.dataset.page === pageId);
+      });
+      const titles = {
+        dashboard: 'Tableau de bord',
+        guests: 'Gestion des Invités',
+        confirmed: 'Invités Confirmés',
+        tables: 'Gestion des Tables',
+        wishes: 'Souhaits reçus',
+        guestbook: 'Livre d\'or'
+      };
+      document.getElementById('pageTitle').innerText = titles[pageId] || 'Dashboard';
+
+      if (pageId === 'guests') loadGuestsList();
+      if (pageId === 'confirmed') loadConfirmedList();
+      if (pageId === 'tables') loadTablesList();
+      if (pageId === 'wishes') loadWishesList();
+      if (pageId === 'guestbook') loadGuestbookList();
+    }
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => setActivePage(link.dataset.page));
+    });
+
+    // Form Toggle & Type Handler
+    const guestFormPanel = document.getElementById('guestFormPanel');
+    const btnToggleGuestForm = document.getElementById('btnToggleGuestForm');
+
+    btnToggleGuestForm.addEventListener('click', () => {
+      if (guestFormPanel.classList.contains('active')) {
+        closeGuestForm();
+      } else {
+        openGuestForm();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && guestFormPanel.classList.contains('active')) {
+        closeGuestForm();
+      }
+    });
+
+    function handleTypeChange() {
+      const type = document.getElementById('type_invite').value;
+      const placesInput = document.getElementById('nombre_places');
+      if (type === 'couple') {
+        placesInput.value = 2;
+      } else if (type === 'seul') {
+        placesInput.value = 1;
+      }
+    }
+
+    function openGuestForm(guestData = null) {
+      loadTablesForSelect();
+      guestFormPanel.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      if (guestData) {
+        document.getElementById('formTitleText').innerText = "Modification de l'invitation";
+        document.getElementById('guest_id').value = guestData.id;
+        document.getElementById('nom').value = guestData.nom || '';
+        document.getElementById('postnom').value = guestData.postnom || '';
+        document.getElementById('prenom').value = guestData.prenom || '';
+        document.getElementById('telephone').value = guestData.telephone || '';
+        document.getElementById('table_assignee').value = guestData.table_assignee || '';
+        document.getElementById('nombre_places').value = guestData.nombre_places || 1;
+        const statutVal = (guestData.statut || '').toLowerCase();
+        if (statutVal.includes('couple')) {
+          document.getElementById('type_invite').value = 'couple';
+        } else {
+          document.getElementById('type_invite').value = 'seul';
+        }
+        document.getElementById('btnSaveGuest').innerText = "Mettre à jour";
+      } else {
+        resetGuestForm();
+      }
+    }
+
+    function closeGuestForm() {
+      guestFormPanel.classList.remove('active');
+      document.body.style.overflow = '';
+      resetGuestForm();
+    }
+
+    function resetGuestForm() {
+      document.getElementById('formTitleText').innerText = "Enregistrer un invité";
+      document.getElementById('guest_id').value = '';
+      document.getElementById('type_invite').value = '';
+      document.getElementById('nom').value = '';
+      document.getElementById('postnom').value = '';
+      document.getElementById('prenom').value = '';
+      document.getElementById('telephone').value = '';
+      document.getElementById('table_assignee').value = '';
+      document.getElementById('nombre_places').value = 1;
+      document.getElementById('btnSaveGuest').innerText = "Enregistrer";
+      document.getElementById('guestFormResult').innerText = '';
+    }
+
+    // Save/Update Guest
+    document.getElementById('btnSaveGuest').addEventListener('click', async () => {
+      const guestId = document.getElementById('guest_id').value;
+      const typeInvite = document.getElementById('type_invite').value;
+      const nom = document.getElementById('nom').value.trim();
+      const prenom = document.getElementById('prenom').value.trim();
+      const resultSpan = document.getElementById('guestFormResult');
+
+      if (!typeInvite) {
+        resultSpan.style.color = 'var(--danger)';
+        resultSpan.innerText = 'Veuillez sélectionner le type d\'invité (Seul ou Couple).';
+        return;
+      }
+
+      if (!nom || !prenom) {
+        resultSpan.style.color = 'var(--danger)';
+        resultSpan.innerText = 'Le nom et le prénom sont obligatoires.';
+        return;
+      }
+
+      const payload = {
+        nom: nom,
+        postnom: document.getElementById('postnom').value.trim(),
+        prenom: prenom,
+        telephone: document.getElementById('telephone').value.trim(),
+        table_assignee: document.getElementById('table_assignee').value || null,
+        nombre_places: document.getElementById('nombre_places').value || (typeInvite === 'couple' ? 2 : 1),
+        statut: typeInvite === 'couple' ? 'Couple' : 'Seul(e)'
+      };
+
+      let url = '/api/admin/add-guest';
+      if (guestId) {
+        url = '/api/admin/update-guest';
+        payload.id = guestId;
+      }
+
+      resultSpan.style.color = 'var(--muted)';
+      resultSpan.innerText = 'Enregistrement...';
+
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          resultSpan.style.color = 'var(--success)';
+          resultSpan.innerText = data.message;
+          setTimeout(() => {
+            closeGuestForm();
+            loadGuestsList();
+            loadMetrics();
+          }, 800);
+        } else {
+          resultSpan.style.color = 'var(--danger)';
+          resultSpan.innerText = data.message || 'Erreur lors de l\'enregistrement';
+        }
+      } catch (err) {
+        resultSpan.style.color = 'var(--danger)';
+        resultSpan.innerText = 'Erreur réseau ou serveur.';
+      }
+    });
+
+    // Load Guest Select Options
+    async function loadTablesForSelect() {
+      const sel = document.getElementById('table_assignee');
+      const currentValue = sel ? sel.value : '';
+      if (sel) sel.innerHTML = '<option value="">---Sélectionner---</option>';
+      
+      let tablesToRender = [];
+      try {
+        const res = await fetch('/api/admin/tables');
+        const data = await res.json();
+        if (data.success && data.tables && data.tables.length > 0) {
+          tablesToRender = data.tables;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+
+      // Fallback automatique si aucune table en base
+      if (tablesToRender.length === 0) {
+        tablesToRender = [
+          { name: 'Table VIP', capacity: 8 },
+          { name: 'Table 1', capacity: 8 },
+          { name: 'Table 2', capacity: 8 },
+          { name: 'Table 3', capacity: 8 },
+          { name: 'Table 4', capacity: 8 },
+          { name: 'Table 5', capacity: 8 },
+          { name: 'Table 6', capacity: 8 },
+          { name: 'Table 7', capacity: 8 },
+          { name: 'Table 8', capacity: 8 },
+          { name: 'Table 9', capacity: 8 },
+          { name: 'Table 10', capacity: 8 }
+        ];
+      }
+
+      allTables = tablesToRender;
+      if (sel) {
+        tablesToRender.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t.name;
+          opt.innerText = `${t.name} (${t.capacity || 8} places)`;
+          sel.appendChild(opt);
+        });
+
+        // Option pour créer une table à la volée
+        const optAdd = document.createElement('option');
+        optAdd.value = '__NEW_TABLE__';
+        optAdd.innerText = '➕ + Créer une nouvelle table...';
+        optAdd.style.fontWeight = 'bold';
+        optAdd.style.color = 'var(--primary)';
+        sel.appendChild(optAdd);
+
+        if (currentValue && currentValue !== '__NEW_TABLE__') {
+          sel.value = currentValue;
+        }
+      }
+    }
+
+    async function handleTableSelectChange(selectElem) {
+      if (selectElem.value === '__NEW_TABLE__') {
+        const newName = prompt("Entrez le nom de la nouvelle table (ex: Table VIP 2, Table Famille) :");
+        if (newName && newName.trim() !== '') {
+          const tableName = newName.trim();
+          try {
+            const res = await fetch('/api/admin/add-table', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name: tableName, capacity: 8, description: 'Créée depuis le formulaire invité' })
+            });
+            await loadTablesForSelect();
+            selectElem.value = tableName;
+          } catch (e) {
+            console.error(e);
+            selectElem.value = '';
+          }
+        } else {
+          selectElem.value = '';
+        }
+      }
+    }
+
+    // Load Guests List
+    async function loadGuestsList() {
+      try {
+        const res = await fetch('/api/admin/guests');
+        const data = await res.json();
+        if (data.success) {
+          allGuests = data.guests || [];
+          renderGuestsTable(allGuests);
+          renderDashboardRecent(allGuests);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderGuestsTable(guests) {
+      const tbody = document.getElementById('guestsTableBody');
+      tbody.innerHTML = '';
+      if (!guests || guests.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--muted)">Aucun invité trouvé.</td></tr>';
+        return;
+      }
+
+      const svgEdit = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+      const svgDelete = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`;
+
+      guests.forEach(g => {
+        const tr = document.createElement('tr');
+        const statusBadge = g.a_confirme 
+          ? '<span class="badge badge-success">Confirmé</span>'
+          : '<span class="badge badge-warning">En attente</span>';
+        
+        tr.innerHTML = `
+          <td><strong>${g.nom} ${g.postnom || ''}</strong> ${g.prenom}</td>
+          <td>${g.telephone || '<span style="color:var(--muted)">-</span>'}</td>
+          <td>${g.table_assignee ? `<span class="badge badge-info">${g.table_assignee}</span>` : '<span style="color:var(--muted)">Non assignée</span>'}</td>
+          <td><strong>${g.nombre_places || 1}</strong></td>
+          <td><span class="badge badge-info">${g.statut || 'Seul(e)'}</span></td>
+          <td>${statusBadge}</td>
+          <td style="text-align:right">
+            <button class="btn btn-secondary btn-sm" onclick="editGuestById(${g.id})">${svgEdit} Éditer</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteGuestById(${g.id})">${svgDelete}</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterGuests() {
+      const search = document.getElementById('guestSearch').value.toLowerCase();
+      const status = document.getElementById('filterStatus').value;
+
+      const filtered = allGuests.filter(g => {
+        const fullname = `${g.nom} ${g.postnom || ''} ${g.prenom}`.toLowerCase();
+        const phone = (g.telephone || '').toLowerCase();
+        const table = (g.table_assignee || '').toLowerCase();
+        const matchesSearch = fullname.includes(search) || phone.includes(search) || table.includes(search);
+
+        let matchesStatus = true;
+        if (status === 'confirmed') matchesStatus = g.a_confirme;
+        if (status === 'pending') matchesStatus = !g.a_confirme;
+
+        return matchesSearch && matchesStatus;
+      });
+
+      renderGuestsTable(filtered);
+    }
+
+    function editGuestById(id) {
+      const guest = allGuests.find(g => g.id === id);
+      if (guest) {
+        openGuestForm(guest);
+      }
+    }
+
+    async function deleteGuestById(id) {
+      if (!confirm('Voulez-vous vraiment supprimer cet invité ?')) return;
+      try {
+        const res = await fetch('/api/admin/delete-guest', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: id })
+        });
+        const data = await res.json();
+        if (data.success) {
+          loadGuestsList();
+          loadMetrics();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Dashboard Recent
+    function renderDashboardRecent(guests) {
+      const tbody = document.getElementById('dashboardRecentGuests');
+      tbody.innerHTML = '';
+      const recent = guests.slice(0, 5);
+      if (recent.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--muted)">Aucun invité disponible.</td></tr>';
+        return;
+      }
+      recent.forEach(g => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${g.nom} ${g.postnom || ''}</strong> ${g.prenom}</td>
+          <td>${g.telephone || '-'}</td>
+          <td>${g.table_assignee || 'Non assignée'}</td>
+          <td>${g.nombre_places || 1}</td>
+          <td>${g.a_confirme ? '<span class="badge badge-success">Confirmé</span>' : '<span class="badge badge-warning">En attente</span>'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Load Metrics
+    async function loadMetrics() {
+      try {
+        const res = await fetch('/api/admin/metrics');
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('metricTotal').innerText = data.total || 0;
+          document.getElementById('metricConfirmed').innerText = data.confirmed || 0;
+          document.getElementById('metricPending').innerText = data.pending || 0;
+          document.getElementById('metricPlaces').innerText = data.places || 0;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Confirmed Guests List
+    async function loadConfirmedList() {
+      try {
+        const res = await fetch('/api/admin/confirmed');
+        const data = await res.json();
+        const tbody = document.getElementById('confirmedTableBody');
+        tbody.innerHTML = '';
+        if (data.success && data.confirmed.length > 0) {
+          data.confirmed.forEach(g => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td><strong>${g.nom} ${g.postnom || ''}</strong> ${g.prenom}</td>
+              <td>${g.telephone || '-'}</td>
+              <td><span class="badge badge-info">${g.table_assignee || 'Non assignée'}</span></td>
+              <td><strong>${g.nombre_places || 1}</strong></td>
+              <td>${g.statut || 'Seul(e)'}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        } else {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--muted)">Aucun invité confirmé pour l\'instant.</td></tr>';
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    document.getElementById('btnRefreshConfirmed').addEventListener('click', loadConfirmedList);
+
+    // Tables Management
+    async function loadTablesList() {
+      try {
+        const res = await fetch('/api/admin/tables');
+        const data = await res.json();
+        const tbody = document.getElementById('tablesTableBody');
+        tbody.innerHTML = '';
+        if (data.success && data.tables.length > 0) {
+          data.tables.forEach(t => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td><strong>${t.name}</strong></td>
+              <td>${t.capacity} places</td>
+              <td>${t.description || '-'}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        } else {
+          tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:var(--muted)">Aucune table enregistrée.</td></tr>';
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    document.getElementById('btnAddTable').addEventListener('click', async () => {
+      const name = document.getElementById('table_name').value.trim();
+      const capacity = document.getElementById('table_capacity').value;
+      const description = document.getElementById('table_description').value.trim();
+      const resSpan = document.getElementById('tableFormResult');
+
+      if (!name) {
+        resSpan.style.color = 'var(--danger)';
+        resSpan.innerText = 'Le nom de la table est requis.';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/admin/add-table', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, capacity, description })
+        });
+        const data = await res.json();
+        if (data.success) {
+          resSpan.style.color = 'var(--success)';
+          resSpan.innerText = data.message;
+          document.getElementById('table_name').value = '';
+          document.getElementById('table_description').value = '';
+          loadTablesList();
+          loadTablesForSelect();
+        } else {
+          resSpan.style.color = 'var(--danger)';
+          resSpan.innerText = data.message;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+
+    // Wishes & Guestbook
+    async function loadWishesList() {
+      try {
+        const res = await fetch('/api/admin/wishes');
+        const data = await res.json();
+        const tbody = document.getElementById('wishesTableBody');
+        tbody.innerHTML = '';
+        if (data.success && data.wishes.length > 0) {
+          data.wishes.forEach(w => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td><strong>${w.guest_name}</strong></td>
+              <td style="color:var(--muted); font-size:12px">${w.created_at || ''}</td>
+              <td>${w.content}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        } else {
+          tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:var(--muted)">Aucun souhait.</td></tr>';
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function loadGuestbookList() {
+      try {
+        const res = await fetch('/api/admin/wishes');
+        const data = await res.json();
+        const tbody = document.getElementById('guestbookTableBody');
+        tbody.innerHTML = '';
+        if (data.success && data.wishes.length > 0) {
+          data.wishes.forEach(w => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td><strong>${w.guest_name}</strong></td>
+              <td style="color:var(--muted); font-size:12px">${w.created_at || ''}</td>
+              <td>${w.content}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        } else {
+          tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:var(--muted)">Aucun message.</td></tr>';
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    document.getElementById('btnAddWish').addEventListener('click', async () => {
+      const name = document.getElementById('wish_guest_name').value.trim();
+      const content = document.getElementById('wish_content').value.trim();
+      const resSpan = document.getElementById('wishFormResult');
+
+      if (!name || !content) {
+        resSpan.style.color = 'var(--danger)';
+        resSpan.innerText = 'Tous les champs sont requis.';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/admin/add-wish', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ guest_name: name, content: content })
+        });
+        const data = await res.json();
+        if (data.success) {
+          resSpan.style.color = 'var(--success)';
+          resSpan.innerText = 'Message ajouté avec succès.';
+          document.getElementById('wish_guest_name').value = '';
+          document.getElementById('wish_content').value = '';
+          loadGuestbookList();
+        } else {
+          resSpan.style.color = 'var(--danger)';
+          resSpan.innerText = data.message;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+
+    // Initial Load
+    loadMetrics();
+    loadGuestsList();
+    loadTablesForSelect();
+  </script>
+</body>
+</html>
