@@ -260,6 +260,131 @@
             100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
         }
 
+        /* --- WISH HEARTS (nouveau rendu) --- */
+        #wishesGrid {
+            position: relative;
+            min-height: 260px;
+            overflow: hidden;
+        }
+
+        .wish-heart {
+            position: absolute;
+            width: 110px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transform-origin: center;
+            transition: transform 0.28s ease, box-shadow 0.28s ease;
+            z-index: 5;
+        }
+
+        .wish-heart svg.heart-svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .wish-text {
+            position: absolute;
+            width: 70%;
+            text-align: center;
+            color: #0a0a0a;
+            font-weight: 700;
+            font-size: 0.72rem;
+            line-height: 1.05rem;
+            padding: 6px 8px;
+            pointer-events: none;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+        .wish-author {
+            position: absolute;
+            bottom: 8px;
+            right: 10px;
+            color: rgba(7,10,16,0.6);
+            font-size: 0.65rem;
+            font-weight: 700;
+            pointer-events: none;
+        }
+
+        .wish-heart:hover { transform: scale(1.06); box-shadow: 0 18px 40px rgba(245,158,11,0.24); }
+
+        @keyframes floatAround {
+            0% { transform: translateY(0) translateX(0) rotate(0deg); }
+            50% { transform: translateY(-18px) translateX(8px) rotate(4deg); }
+            100% { transform: translateY(0) translateX(0) rotate(0deg); }
+        }
+
+        /* Scroll modal (rouleau) */
+        .scroll-modal {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(7,10,16,0.45);
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 220ms ease;
+        }
+
+        .scroll-modal.open { opacity: 1; pointer-events: auto; }
+
+        .scroll-wrap {
+            width: min(88%, 520px);
+            max-width: 92vw;
+            background: linear-gradient(180deg, #fff8eb 0%, #fff1d6 50%, #ffeecf 100%);
+            border-radius: 12px;
+            box-shadow: 0 18px 50px rgba(5,8,12,0.6);
+            position: relative;
+            padding: 28px 34px;
+            transform: translateY(12px) scale(0.98);
+            transition: transform 220ms ease;
+        }
+
+        .scroll-modal.open .scroll-wrap { transform: translateY(0) scale(1); }
+
+        .scroll-rod {
+            position: absolute;
+            left: 50%;
+            width: 88%;
+            height: 18px;
+            background: linear-gradient(90deg,#6b3f1a,#c98e46);
+            transform: translateX(-50%);
+            border-radius: 6px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+        }
+
+        .scroll-rod.top { top: -12px; }
+        .scroll-rod.bottom { bottom: -12px; }
+
+        .scroll-para {
+            font-family: 'Merriweather', serif;
+            color: #2b1706;
+            font-size: 1rem;
+            line-height: 1.45rem;
+            padding: 10px 6px 28px 6px;
+            text-align: center;
+            white-space: pre-wrap;
+        }
+
+        .scroll-close {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            background: transparent;
+            border: none;
+            font-size: 1.4rem;
+            color: #5a2f12;
+            cursor: pointer;
+        }
+
         /* Typographies de prestige */
         .font-serif { font-family: 'Playfair Display', serif; }
         .font-script { 
@@ -578,6 +703,51 @@
             background: rgba(255, 255, 255, 0.07);
         }
 
+        /* Champ code secret spécifique (maquette mobile) */
+        #secretCodeInput {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(7, 10, 16, 0.55);
+            border-radius: 14px;
+            border: 2px solid rgba(245, 158, 11, 0.38);
+            color: var(--text-light);
+            font-size: 0.98rem;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            box-shadow: inset 0 4px 12px rgba(0,0,0,0.45), 0 8px 22px rgba(245,158,11,0.06);
+        }
+
+        #secretCodeInput::placeholder {
+            color: rgba(248,250,252,0.38);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* Style du bouton Déverrouiller (taille réduite) */
+        #btnCheckCode {
+            padding: 12px 18px;
+            font-size: 0.98rem;
+            max-width: 320px;
+        }
+
+        /* Responsive: garder le même rendu sur mobile et desktop */
+        @media (max-width: 600px) {
+            .modal-content { max-width: 92%; padding: 28px; border-radius: 20px; }
+            #secretCodeInput { padding: 12px 14px; font-size: 0.98rem; letter-spacing: 4px; }
+            #btnCheckCode {
+                display: block !important;
+                width: 100% !important;
+                min-width: 0 !important;
+                padding: 12px 16px !important;
+                font-size: 0.98rem !important;
+                box-shadow: 0 14px 30px rgba(245,158,11,0.12) !important;
+            }
+            .modal-content .close-btn { right: 18px; top: 14px; }
+        }
+
         .radio-group { display: flex; gap: 25px; margin-top: 10px; }
         .radio-label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.95rem; }
         .radio-label input { accent-color: var(--gold-main); width: 18px; height: 18px; }
@@ -608,11 +778,11 @@
                     <i class="fa-solid fa-crown" style="margin-right: 6px;"></i> Invitation Officielle de Mariage <i class="fa-solid fa-crown" style="margin-left: 6px;"></i>
                 </span>
                 <h1 class="font-script" style="font-size: clamp(3.2rem, 9vw, 5.5rem); margin-top: 5px; margin-bottom: 0;">Rebecca &amp; Jacques</h1>
-                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 6px;">Cliquez sur le sceau de cire doré pour déverrouiller votre enveloppe d'invitation.</p>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 6px;">Votre enveloppe est prête. Confirmez votre présence et vous pourrez revenir ouvrir l'invitation à tout moment.</p>
             </div>
 
             <!-- 3D ENVELOPE ARTWORK -->
-            <div class="envelope-3d-wrapper" id="envelope3D" onclick="promptSecretCode()">
+            <div class="envelope-3d-wrapper" id="envelope3D" onclick="envelopeClickHandler()">
                 <!-- BACK OF ENVELOPE -->
                 <div class="env-back"></div>
                 
@@ -637,54 +807,60 @@
                 <!-- GOLDEN WAX SEAL IN CENTER -->
                 <div class="wax-seal" id="waxSeal">
                     <div class="wax-seal-inner">
-                        <span style="font-family: 'Cinzel Decorative', serif; font-size: 1.05rem; font-weight: 700; color: #fff;">S &amp; T</span>
+                        <span style="font-family: 'Cinzel Decorative', serif; font-size: 1.05rem; font-weight: 700; color: #fff;">R &amp; J</span>
                         <i class="fa-solid fa-lock wax-lock-icon"></i>
                     </div>
                     <div class="wax-seal-pulse"></div>
                 </div>
             </div>
 
-            <div style="margin-top: 30px;">
-                <button class="btn-gold" onclick="promptSecretCode()" style="padding: 12px 28px; font-size: 0.95rem;">
-                    <i class="fa-solid fa-key" style="margin-right: 8px;"></i> Saisir le Code Secret d'Invitation
+            <!-- BOUTON D'ACCÈS PAR CODE SECRET (Affiché sur l'enveloppe) -->
+            <div style="margin-top: 28px;">
+                <button class="btn-gold" style="width: 100%; max-width: 520px; padding: 20px 36px; border-radius: 50px; font-size: 1.05rem; letter-spacing: 4px; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; gap: 16px; box-shadow: 0 18px 40px rgba(245,158,11,0.15);" onclick="promptSecretCode()">
+                    <i class="fa-solid fa-key" style="color: #05070C; font-size: 1.05rem;"></i>
+                    SAISIR LE CODE SECRET D'INVITATION
                 </button>
             </div>
-        </div>
-    </div>
 
-    <!-- SECRET CODE PROMPT MODAL -->
-    <div class="modal-overlay" id="codeModal" style="z-index: 10001;">
-        <div class="modal-content" style="max-width: 440px;">
-            <span class="close-btn" onclick="closeCodeModal()">&times;</span>
-            <div style="text-align: center; margin-bottom: 20px;">
-                <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(245, 158, 11, 0.15); border: 1px solid var(--gold-main); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px;">
-                    <i class="fa-solid fa-shield-halved" style="font-size: 1.8rem; color: var(--gold-main);"></i>
-                </div>
-                <h3 class="font-serif" style="font-size: 1.6rem; color: var(--gold-light);">Accès Sécurisé</h3>
-                <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 4px;">Saisissez le code secret envoyé par l'administrateur pour ouvrir votre enveloppe.</p>
-            </div>
-
-            <form id="codeForm" onsubmit="validerCodeSecret(event)">
-                <div style="display: flex; gap: 12px; align-items: flex-end; margin-bottom: 18px;">
-                    <div style="flex: 1;">
-                        <label style="display:block; margin-bottom:8px;"><i class="fa-solid fa-key" style="margin-right: 8px; color: var(--gold-main);"></i>Code Secret</label>
-                        <input type="text" id="secretCodeInput" class="form-control" placeholder="ex: VIP2026" style="width: 100%; text-align: center; font-size: 1.2rem; letter-spacing: 3px; font-weight: 700; text-transform: uppercase;" required>
-                    </div>
-                    <div style="display: flex; gap: 10px; align-items: center;">
-                        <button type="button" class="btn-gold" style="background:#fff; color:#070b14; border:1px solid rgba(245, 158, 11, 0.4); min-width: 120px; padding: 14px;" onclick="closeCodeModal()">Annuler</button>
-                        <button type="submit" id="btnCheckCode" class="btn-gold" style="min-width: 160px; justify-content: center; padding: 14px;">
-                            <i class="fa-solid fa-envelope-open-text"></i> Déverrouiller
-                        </button>
-                    </div>
-                </div>
-
-                <div id="codeErrorBox" style="display: none; color: #fb7185; font-size: 0.85rem; text-align: center; margin-bottom: 15px; font-weight: 600;"></div>
-            </form>
         </div>
     </div>
 
     <!-- PARTICULES DE CŒURS DORÉS VOLANTS -->
     <div id="hearts-container"></div>
+
+    <!-- SECRET CODE PROMPT MODAL -->
+    <div class="modal-overlay" id="codeModal" style="z-index: 10001;">
+        <div class="modal-content" style="max-width: 440px; display:flex; flex-direction:column; justify-content:space-between; min-height:420px;">
+            <span class="close-btn" onclick="closeCodeModal()">&times;</span>
+            <div style="text-align: center; margin-bottom: 12px;">
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(245, 158, 11, 0.15); border: 1px solid var(--gold-main); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+                    <i class="fa-solid fa-shield-halved" style="font-size: 1.8rem; color: var(--gold-main);"></i>
+                </div>
+                <h3 class="font-serif" style="font-size: 1.6rem; color: var(--gold-light);">Accès Sécurisé</h3>
+            </div>
+
+            <form id="codeForm" onsubmit="validerCodeSecret(event)" style="width:100%;">
+                <div style="margin: 6px 6px 8px 6px; color: var(--text-muted); font-size:0.95rem; text-align:center;">
+                    Saisissez le code secret envoyé par l'administrateur pour ouvrir votre enveloppe.
+                </div>
+
+                <div style="margin: 6px 6px 0 6px;">
+                    <label style="display:block; margin-bottom:10px; color:var(--gold-light); font-weight:700;"><i class="fa-solid fa-key" style="margin-right: 8px; color: var(--gold-main);"></i>Code Secret</label>
+                    <input type="text" id="secretCodeInput" class="form-control" placeholder="EX: VIP2026" style="width: 100%;" required>
+                </div>
+
+                <div id="codeErrorBox" style="display: none; color: #fb7185; font-size: 0.85rem; text-align: center; margin-top: 12px; font-weight: 600;"></div>
+
+                <div style="flex:1 1 auto;"></div>
+
+                <div style="display:flex; justify-content:center; margin-top:18px; padding-bottom:8px;">
+                    <button type="submit" id="btnCheckCode" class="btn-gold" style="width:100%; max-width:320px; padding: 12px 18px; border-radius: 50px; font-size: 0.98rem; letter-spacing: 1.2px; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 14px 30px rgba(245,158,11,0.12);">
+                        <i class="fa-solid fa-envelope-open-text"></i> DÉVERROUILLER L'ENVELOPPE
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- 1. HERO SECTION -->
     <section class="hero">
@@ -777,7 +953,7 @@
         <p class="reveal" style="color: var(--text-muted); max-width: 550px; margin-bottom: 35px; font-size: 1.05rem;">
             Afin d'assurer le meilleur accueil à nos précieux invités, veuillez valider votre présence en vérifiant votre nom dans notre liste officielle.
         </p>
-        <button class="btn-gold reveal" onclick="openModal()">
+        <button id="rsvpCTA" class="btn-gold reveal" onclick="openModal()">
             <i class="fa-solid fa-heart"></i> Confirmer ma présence
         </button>
     </section>
@@ -870,7 +1046,7 @@
 
     <!-- FOOTER -->
     <footer>
-        <p class="font-script" style="font-size: 2.4rem; margin-bottom: 8px;">Rebecca &amp; Jacques</p>
+        <p class="font-script" style="font-size: 2.4rem; margin-bottom: 8px;">Rebeccay &amp; Jacques</p>
         <p>© 2026 - Invitation de Mariage de Prestige VIP. Avec tout notre amour.</p>
     </footer>
 
@@ -969,6 +1145,12 @@
                 resultBox.style.display = 'block';
 
                 if (response.ok && data.success) {
+                    sessionStorage.setItem('invitationUnlocked', 'true');
+                    const gate = document.getElementById('envelope-gate');
+                    if (gate) gate.classList.add('unlocked');
+                    const rsvpCTA = document.getElementById('rsvpCTA');
+                    if (rsvpCTA) rsvpCTA.style.display = 'none';
+
                     resultBox.className = "result-box success";
                     resultBox.innerHTML = `
                         <h3 class="font-serif" style="color:#34D399; font-size:1.5rem;"><i class="fa-solid fa-circle-check" style="color:#34D399; margin-right:8px;"></i> Accès VIP Confirmé</h3>
@@ -1000,24 +1182,52 @@
                 btnSubmit.disabled = false;
             }
         }
-        // Gestion de l'Enveloppe & Code Secret
+        // Gestion du Code Secret pour l'enveloppe
+        function envelopeClickHandler() {
+            const unlocked = sessionStorage.getItem('invitationUnlocked') === 'true';
+            const env3D = document.getElementById('envelope3D');
+            const gate = document.getElementById('envelope-gate');
+            if (unlocked) {
+                if (env3D) env3D.classList.toggle('opened');
+                if (gate && env3D && env3D.classList.contains('opened')) gate.classList.add('unlocked');
+            } else {
+                promptSecretCode();
+            }
+        }
+
         function promptSecretCode() {
-            document.getElementById('codeModal').classList.add('active');
+            const modal = document.getElementById('codeModal');
+            if (!modal) return;
+            modal.classList.add('active');
             document.body.style.overflow = 'hidden';
-            document.getElementById('secretCodeInput').focus();
+            const input = document.getElementById('secretCodeInput');
+            if (input) input.focus();
         }
 
         function closeCodeModal() {
-            document.getElementById('codeModal').classList.remove('active');
+            const modal = document.getElementById('codeModal');
+            if (!modal) return;
+            modal.classList.remove('active');
             document.body.style.overflow = '';
-            document.getElementById('codeErrorBox').style.display = 'none';
+            const err = document.getElementById('codeErrorBox');
+            if (err) { err.style.display = 'none'; err.innerText = ''; }
+            const form = document.getElementById('codeForm');
+            if (form) form.reset();
         }
 
         async function validerCodeSecret(event) {
             event.preventDefault();
-            const codeInput = document.getElementById('secretCodeInput').value;
+            const codeInputEl = document.getElementById('secretCodeInput');
             const btnCheck = document.getElementById('btnCheckCode');
             const errBox = document.getElementById('codeErrorBox');
+            if (!codeInputEl || !btnCheck || !errBox) return;
+
+            const code = codeInputEl.value.trim();
+            if (!code) {
+                errBox.style.display = 'block';
+                errBox.innerText = 'Veuillez saisir le code secret.';
+                return;
+            }
 
             btnCheck.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Validation...`;
             btnCheck.disabled = true;
@@ -1027,36 +1237,46 @@
                 const response = await fetch('/api/verify-code', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code: codeInput })
+                    body: JSON.stringify({ code })
                 });
                 const data = await response.json();
 
                 if (response.ok && data.success) {
                     closeCodeModal();
-                    // Animation ouverture 3D enveloppe
                     const env3D = document.getElementById('envelope3D');
-                    env3D.classList.add('opened');
-
+                    if (env3D) env3D.classList.add('opened');
+                    // If the code corresponds to a guest who already confirmed, hide RSVP CTA
+                    if (data.guest && data.guest.confirme) {
+                        const rsvpCTA = document.getElementById('rsvpCTA');
+                        if (rsvpCTA) rsvpCTA.style.display = 'none';
+                    }
                     setTimeout(() => {
                         const gate = document.getElementById('envelope-gate');
-                        gate.classList.add('unlocked');
+                        if (gate) gate.classList.add('unlocked');
                         sessionStorage.setItem('invitationUnlocked', 'true');
-                    }, 1200);
+                    }, 900);
                 } else {
                     errBox.style.display = 'block';
-                    errBox.innerText = data.message || "Code secret incorrect.";
+                    errBox.innerText = data.message || 'Code secret incorrect.';
                 }
             } catch (err) {
                 console.error(err);
                 errBox.style.display = 'block';
-                errBox.innerText = "Erreur réseau. Veuillez réessayer.";
+                errBox.innerText = 'Erreur réseau. Veuillez réessayer.';
             } finally {
-                btnCheck.innerHTML = `<i class="fa-solid fa-envelope-open-text"></i> Déverrouiller l'Enveloppe`;
+                btnCheck.innerHTML = `<i class="fa-solid fa-envelope-open-text"></i> Déverrouiller`;
                 btnCheck.disabled = false;
             }
         }
 
-        // Charger les vœux du Livre d'Or
+        // fermer le modal lorsqu'on clique hors du contenu
+        (function(){
+            const modal = document.getElementById('codeModal');
+            if (!modal) return;
+            modal.addEventListener('click', function(e){ if (e.target === this) closeCodeModal(); });
+        })();
+
+        // Charger les vœux du Livre d'Or — rendu en cœurs flottants
         async function loadPublicWishes() {
             const grid = document.getElementById('wishesGrid');
             if (!grid) return;
@@ -1067,32 +1287,65 @@
 
                 if (data.success && data.wishes && data.wishes.length > 0) {
                     grid.innerHTML = '';
-                    data.wishes.forEach(w => {
-                        const dateStr = w.created_at ? new Date(w.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
-                        const card = document.createElement('div');
-                        card.style.cssText = `
-                            background: rgba(15, 21, 35, 0.7);
-                            backdrop-filter: blur(10px);
-                            border: 1px solid var(--glass-border);
-                            border-radius: 18px;
-                            padding: 22px;
-                            text-align: left;
-                            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-                            display: flex;
-                            flex-direction: column;
-                            justify-content: space-between;
-                        `;
-                        card.innerHTML = `
-                            <div>
-                                <i class="fa-solid fa-quote-left" style="color: var(--gold-main); font-size: 1.3rem; margin-bottom: 10px; opacity: 0.7;"></i>
-                                <p style="color: var(--text-light); font-size: 0.95rem; font-style: italic; line-height: 1.5; margin-bottom: 15px;">"${w.content}"</p>
-                            </div>
-                            <div style="border-top: 1px solid rgba(245, 158, 11, 0.15); padding-top: 10px; display: flex; justify-content: space-between; align-items: center;">
-                                <strong style="color: var(--gold-light); font-size: 0.9rem;"><i class="fa-solid fa-user-pen" style="margin-right: 6px; color: var(--gold-main);"></i>${w.guest_name}</strong>
-                                <small style="color: var(--text-muted); font-size: 0.75rem;">${dateStr}</small>
-                            </div>
-                        `;
-                        grid.appendChild(card);
+                    grid.style.position = 'relative';
+                    grid.style.minHeight = '260px';
+
+                    data.wishes.forEach((w, idx) => {
+                        const heart = document.createElement('div');
+                        heart.className = 'wish-heart';
+                        // random position within the grid area
+                        const left = 6 + Math.random() * 88; // percent
+                        const top = 6 + Math.random() * 70; // percent
+                        heart.style.left = left + '%';
+                        heart.style.top = top + '%';
+                        // small variation animation
+                        heart.style.animation = `floatAround ${4 + Math.random()*4}s ease-in-out ${Math.random()*2}s infinite`;
+
+                        // create SVG heart shape
+                        const ns = 'http://www.w3.org/2000/svg';
+                        const svg = document.createElementNS(ns, 'svg');
+                        svg.setAttribute('viewBox', '0 0 32 29.6');
+                        svg.classList.add('heart-svg');
+                        const path = document.createElementNS(ns, 'path');
+                        path.setAttribute('d', 'M23.6,0c-3.4,0-5.8,2.3-7.6,4.6C14.2,2.3,11.8,0,8.4,0C3.7,0,0,3.7,0,8.4c0,4.2,3.4,7.5,8.6,12.3 c3.3,3,6.1,5.6,7.4,6.9c1.3-1.3,4.1-3.9,7.4-6.9C28.6,15.9,32,12.6,32,8.4C32,3.7,28.3,0,23.6,0z');
+                        path.setAttribute('fill', 'url(#gHeart)');
+                        svg.appendChild(path);
+
+                        // gradient defs
+                        const defs = document.createElementNS(ns, 'defs');
+                        const grad = document.createElementNS(ns, 'linearGradient');
+                        grad.setAttribute('id', 'gHeart');
+                        grad.setAttribute('x1', '0');
+                        grad.setAttribute('y1', '0');
+                        grad.setAttribute('x2', '1');
+                        grad.setAttribute('y2', '1');
+                        const stop1 = document.createElementNS(ns, 'stop'); stop1.setAttribute('offset','0%'); stop1.setAttribute('stop-color','#FFF1D6');
+                        const stop2 = document.createElementNS(ns, 'stop'); stop2.setAttribute('offset','45%'); stop2.setAttribute('stop-color','#F6C85C');
+                        const stop3 = document.createElementNS(ns, 'stop'); stop3.setAttribute('offset','100%'); stop3.setAttribute('stop-color','#F59E0B');
+                        grad.appendChild(stop1); grad.appendChild(stop2); grad.appendChild(stop3);
+                        defs.appendChild(grad);
+                        svg.insertBefore(defs, svg.firstChild);
+
+                        // text inside heart
+                        const text = document.createElement('div');
+                        text.className = 'wish-text';
+                        text.textContent = w.content || '';
+
+                        const author = document.createElement('div');
+                        author.className = 'wish-author';
+                        author.textContent = w.guest_name || 'Anonyme';
+
+                        heart.appendChild(svg);
+                        heart.appendChild(text);
+                        heart.appendChild(author);
+
+                        // on click show rouleau modal with full wish
+                        heart.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            showWishScroll(w);
+                        });
+
+                        grid.appendChild(heart);
                     });
                 } else {
                     grid.innerHTML = `<div style="grid-column: 1/-1; color: var(--text-muted); font-size: 0.95rem;">Soyez le premier à laisser un message dans le Livre d'Or !</div>`;

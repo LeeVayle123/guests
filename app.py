@@ -461,14 +461,7 @@ def verify_secret_code():
         guest = cursor.fetchone()
 
         if guest:
-            if guest.get('secret_used'):
-                cursor.close()
-                conn.close()
-                return jsonify({"success": False, "message": "Ce code secret a déjà été utilisé."}), 401
-
-            update_query = "UPDATE guests SET secret_used = TRUE WHERE id = %s"
-            cursor.execute(update_query, (guest['id'],))
-            conn.commit()
+            # Do NOT mark secret as used here — allow the same code to open the envelope multiple times.
             cursor.close()
             conn.close()
 
@@ -478,7 +471,8 @@ def verify_secret_code():
                 "prenom": guest['prenom'],
                 "table": guest['table_assignee'],
                 "place": guest['nombre_places'],
-                "statut": guest['statut']
+                "statut": guest['statut'],
+                "confirme": bool(guest.get('a_confirme'))
             }}), 200
             
         cursor.close()
