@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invitation VIP - Sarah & Thomas</title>
+    <title>Invitation VIP & Légendaire - Sarah & Thomas</title>
 
     <!-- Polices Google Premium -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,26 +14,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- DESIGN SYSTEM & VARS LUXE --- */
+        /* --- DESIGN SYSTEM ULTRA LUXE & OR --- */
         :root {
-            --bg-night: #05070c;
-            --bg-card: rgba(18, 24, 38, 0.55);
+            --bg-night: #030509;
+            --bg-card: rgba(15, 21, 35, 0.65);
             --gold-light: #FDE68A;
             --gold-main: #F59E0B;
-            --gold-dark: #D97706;
-            --gold-gradient: linear-gradient(135deg, #FDE68A 0%, #F59E0B 50%, #B45309 100%);
+            --gold-dark: #B45309;
+            --gold-gradient: linear-gradient(135deg, #FFFBEB 0%, #FDE68A 30%, #F59E0B 70%, #92400E 100%);
             --gold-glow: linear-gradient(90deg, #FCD34D, #F59E0B);
             
             --text-light: #F8FAFC;
             --text-muted: #94A3B8;
-            --rose-accent: #FB7185;
+            --rose-pink: #F43F5E;
             
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(245, 158, 11, 0.18);
-            --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            --glass-border: rgba(245, 158, 11, 0.25);
+            --glass-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
         }
 
-        /* --- STYLES GENERAUX --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
         body { 
@@ -44,44 +42,69 @@
             line-height: 1.6;
         }
 
+        /* --- PARTICULES & CŒURS VOLANTS EN ARRIÈRE-PLAN --- */
+        #hearts-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .floating-heart {
+            position: absolute;
+            color: rgba(245, 158, 11, 0.25);
+            font-size: 1rem;
+            animation: floatUp 12s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0.5) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.7; }
+            80% { opacity: 0.7; }
+            100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
+        }
+
         /* Typographies de prestige */
         .font-serif { font-family: 'Playfair Display', serif; }
-        .font-luxury { font-family: 'Cinzel Decorative', serif; }
         .font-script { 
             font-family: 'Alex Brush', cursive; 
-            font-size: clamp(3.2rem, 9vw, 6.5rem); 
+            font-size: clamp(3.8rem, 11vw, 7.5rem); 
             line-height: 1.1;
             background: var(--gold-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 4px 15px rgba(245, 158, 11, 0.3));
+            filter: drop-shadow(0 6px 20px rgba(245, 158, 11, 0.4));
         }
 
-        /* --- ANIMATIONS & REVEAL --- */
-        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* --- SECTIONS --- */
+        /* SECTIONS */
         section { 
             position: relative; 
-            padding: 100px 20px; 
+            padding: 120px 20px; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             text-align: center;
+            z-index: 2;
         }
 
         .section-tag {
-            font-size: 0.8rem;
-            letter-spacing: 5px;
+            font-size: 0.85rem;
+            letter-spacing: 6px;
             text-transform: uppercase;
             color: var(--gold-main);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .section-title { 
             font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 5vw, 3.2rem); 
+            font-size: clamp(2.2rem, 6vw, 3.6rem); 
             margin-bottom: 20px; 
             background: var(--gold-gradient);
             -webkit-background-clip: text;
@@ -89,125 +112,126 @@
         }
 
         .divider {
-            width: 100px;
+            width: 120px;
             height: 2px;
             background: var(--gold-gradient);
-            margin: 0 auto 40px auto;
+            margin: 0 auto 50px auto;
             position: relative;
             border-radius: 2px;
         }
         .divider::after {
-            content: '✦';
+            content: '❤';
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             background: var(--bg-night);
             color: var(--gold-main);
-            padding: 0 8px;
-            font-size: 0.8rem;
+            padding: 0 10px;
+            font-size: 0.9rem;
         }
 
-        /* --- HERO SECTION --- */
+        /* HERO SECTION */
         .hero { 
             min-height: 100vh; 
             justify-content: center;
-            background: linear-gradient(180deg, rgba(5, 7, 12, 0.4) 0%, rgba(5, 7, 12, 0.95) 100%), 
+            background: linear-gradient(180deg, rgba(3, 5, 9, 0.5) 0%, rgba(3, 5, 9, 0.95) 100%), 
                         url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
-            position: relative;
-            overflow: hidden;
         }
         
         .hero-card {
-            background: rgba(11, 15, 25, 0.65);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: rgba(10, 14, 25, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            padding: 60px 40px;
-            border-radius: 28px;
-            max-width: 800px;
-            width: 90%;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
-            animation: heroFloat 8s ease-in-out infinite;
+            padding: 70px 45px;
+            border-radius: 35px;
+            max-width: 850px;
+            width: 92%;
+            box-shadow: 0 35px 90px rgba(0, 0, 0, 0.8), 0 0 40px rgba(245, 158, 11, 0.15);
+            animation: heroPulse 6s ease-in-out infinite;
         }
 
-        @keyframes heroFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        @keyframes heroPulse {
+            0%, 100% { transform: translateY(0); box-shadow: 0 35px 90px rgba(0, 0, 0, 0.8), 0 0 40px rgba(245, 158, 11, 0.15); }
+            50% { transform: translateY(-12px); box-shadow: 0 45px 100px rgba(0, 0, 0, 0.9), 0 0 60px rgba(245, 158, 11, 0.25); }
         }
 
         .hero-date-badge {
-            display: inline-block;
-            padding: 8px 24px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 28px;
             border-radius: 50px;
             border: 1px solid var(--glass-border);
-            background: rgba(245, 158, 11, 0.08);
+            background: rgba(245, 158, 11, 0.1);
             color: var(--gold-light);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             letter-spacing: 3px;
-            margin-top: 20px;
+            margin-top: 25px;
             text-transform: uppercase;
         }
 
-        /* --- COMPTE À REBOURS --- */
+        /* COMPTE À REBOURS */
         .countdown-container {
             display: flex;
-            gap: 20px;
-            margin-top: 35px;
+            gap: 22px;
+            margin-top: 40px;
             justify-content: center;
             flex-wrap: wrap;
         }
 
         .count-box {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border);
-            padding: 15px;
-            border-radius: 16px;
-            min-width: 85px;
-            backdrop-filter: blur(5px);
+            padding: 18px 20px;
+            border-radius: 20px;
+            min-width: 95px;
+            backdrop-filter: blur(8px);
+            box-shadow: inset 0 0 15px rgba(245, 158, 11, 0.1);
         }
 
         .count-num {
             font-family: 'Playfair Display', serif;
-            font-size: 2rem;
+            font-size: 2.3rem;
             font-weight: 700;
             color: var(--gold-light);
         }
 
         .count-label {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
             color: var(--text-muted);
-            letter-spacing: 1px;
+            letter-spacing: 2px;
         }
 
-        /* --- HISTOIRE --- */
+        /* HISTOIRE ET CONTENEURS */
         .story-container {
-            max-width: 850px;
+            max-width: 900px;
             background: var(--bg-card);
             border: 1px solid var(--glass-border);
-            padding: 50px 40px;
-            border-radius: 24px;
-            backdrop-filter: blur(10px);
+            padding: 60px 45px;
+            border-radius: 30px;
+            backdrop-filter: blur(15px);
             box-shadow: var(--glass-shadow);
         }
 
-        /* --- GALERIE --- */
+        /* GALERIE EN GRILLE ROYALE */
         .gallery-grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
-            gap: 25px; 
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); 
+            gap: 30px; 
             width: 100%; 
-            max-width: 1100px; 
+            max-width: 1200px; 
         }
         
         .gallery-item { 
             position: relative; 
             overflow: hidden; 
-            border-radius: 20px; 
+            border-radius: 24px; 
             border: 1px solid var(--glass-border); 
-            height: 320px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            height: 350px;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.6);
             transition: all 0.5s ease;
         }
 
@@ -215,93 +239,95 @@
             width: 100%; 
             height: 100%; 
             object-fit: cover; 
-            transition: transform 0.8s ease; 
+            transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); 
         }
 
         .gallery-item:hover { 
-            transform: translateY(-8px); 
+            transform: translateY(-10px) scale(1.02); 
             border-color: var(--gold-main);
-            box-shadow: 0 20px 45px rgba(245, 158, 11, 0.2); 
+            box-shadow: 0 25px 55px rgba(245, 158, 11, 0.3); 
         }
 
         .gallery-item:hover img { 
-            transform: scale(1.1); 
+            transform: scale(1.12); 
         }
 
-        /* --- PROGRAMME --- */
+        /* PROGRAMME ROYALE */
         .prog-timeline {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 35px;
             width: 100%;
-            max-width: 1100px;
+            max-width: 1200px;
         }
 
         .prog-card {
             background: var(--bg-card);
             border: 1px solid var(--glass-border);
-            padding: 40px 30px;
-            border-radius: 20px;
+            padding: 45px 35px;
+            border-radius: 26px;
             text-align: center;
             transition: all 0.4s ease;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
         }
 
         .prog-card:hover {
-            transform: translateY(-6px);
-            background: rgba(245, 158, 11, 0.05);
+            transform: translateY(-8px);
+            background: rgba(245, 158, 11, 0.08);
             border-color: var(--gold-main);
+            box-shadow: 0 20px 40px rgba(245, 158, 11, 0.2);
         }
 
         .prog-icon {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             color: var(--gold-main);
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.5));
         }
 
         .prog-time {
             font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
+            font-size: 1.7rem;
             color: var(--gold-light);
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
-        /* --- BOUTON BOUTON VIP --- */
+        /* BOUTON LUXE DORÉ */
         .btn-gold {
             background: var(--gold-gradient);
-            color: #070B14;
+            color: #05070C;
             font-family: 'Playfair Display', serif;
             font-weight: 700;
-            font-size: 1.1rem;
-            padding: 16px 45px;
+            font-size: 1.15rem;
+            padding: 18px 50px;
             border-radius: 50px;
             border: none;
             cursor: pointer;
-            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
-            transition: all 0.3s ease;
+            box-shadow: 0 12px 35px rgba(245, 158, 11, 0.35);
+            transition: all 0.35s ease;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
             display: inline-flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
 
         .btn-gold:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(245, 158, 11, 0.5);
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 22px 50px rgba(245, 158, 11, 0.55);
             background: linear-gradient(135deg, #FFFBEB 0%, #F59E0B 100%);
         }
 
-        /* --- MODAL RSVP --- */
+        /* MODAL RSVP */
         .modal-overlay { 
             position: fixed; 
             inset: 0; 
             display: none; 
             justify-content: center; 
             align-items: center; 
-            background: rgba(3, 5, 10, 0.85); 
-            backdrop-filter: blur(12px);
+            background: rgba(2, 4, 8, 0.88); 
+            backdrop-filter: blur(15px);
             z-index: 1000; 
             padding: 20px;
         }
@@ -309,18 +335,18 @@
 
         .modal-content { 
             width: 100%; 
-            max-width: 520px; 
-            background: #0B101D; 
-            border-radius: 28px; 
-            padding: 40px; 
+            max-width: 550px; 
+            background: #090D18; 
+            border-radius: 30px; 
+            padding: 45px; 
             border: 1px solid var(--glass-border); 
-            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.9); 
+            box-shadow: 0 35px 100px rgba(0, 0, 0, 0.95), 0 0 30px rgba(245, 158, 11, 0.2); 
             position: relative;
             animation: modalIn 0.4s ease forwards;
         }
 
         @keyframes modalIn {
-            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            from { opacity: 0; transform: translateY(40px) scale(0.92); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
@@ -328,63 +354,68 @@
             position: absolute;
             top: 20px;
             right: 25px;
-            font-size: 1.8rem;
+            font-size: 2rem;
             color: var(--text-muted);
             cursor: pointer;
             transition: color 0.3s;
         }
         .close-btn:hover { color: var(--gold-main); }
 
-        .form-group { margin-bottom: 20px; text-align: left; }
-        .form-group label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; display: block; }
+        .form-group { margin-bottom: 22px; text-align: left; }
+        .form-group label { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 8px; display: block; }
         
         .form-control { 
             width: 100%; 
-            padding: 14px 18px; 
-            background: rgba(255, 255, 255, 0.03); 
-            border-radius: 12px; 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
+            padding: 15px 20px; 
+            background: rgba(255, 255, 255, 0.04); 
+            border-radius: 14px; 
+            border: 1px solid rgba(255, 255, 255, 0.12); 
             color: var(--text-light); 
-            font-size: 0.95rem;
+            font-size: 0.98rem;
             transition: all 0.3s;
         }
         .form-control:focus { 
             outline: none; 
             border-color: var(--gold-main); 
-            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15); 
-            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2); 
+            background: rgba(255, 255, 255, 0.07);
         }
 
-        .radio-group { display: flex; gap: 20px; margin-top: 8px; }
-        .radio-label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.9rem; }
-        .radio-label input { accent-color: var(--gold-main); }
+        .radio-group { display: flex; gap: 25px; margin-top: 10px; }
+        .radio-label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.95rem; }
+        .radio-label input { accent-color: var(--gold-main); width: 18px; height: 18px; }
 
-        .result-box { display: none; padding: 25px; border-radius: 16px; margin-top: 15px; }
-        .result-box.success { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #34D399; }
-        .result-box.error { background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.3); color: #FB7185; }
+        .result-box { display: none; padding: 30px; border-radius: 20px; margin-top: 20px; }
+        .result-box.success { background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.4); color: #34D399; }
+        .result-box.error { background: rgba(244, 63, 94, 0.12); border: 1px solid rgba(244, 63, 94, 0.4); color: #FB7185; }
 
         /* FOOTER */
         footer {
-            padding: 40px;
+            padding: 50px;
             text-align: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
             color: var(--text-muted);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 2;
         }
     </style>
 </head>
 <body>
 
+    <!-- PARTICULES DE CŒURS DORÉS VOLANTS -->
+    <div id="hearts-container"></div>
+
     <!-- 1. HERO SECTION -->
     <section class="hero">
         <div class="hero-card reveal">
-            <div class="section-tag">Invitation VIP</div>
+            <div class="section-tag"><i class="fa-solid fa-crown"></i> Invitation VIP Officielle <i class="fa-solid fa-crown"></i></div>
             <h1 class="font-script">Sarah &amp; Thomas</h1>
-            <p class="font-serif" style="font-size: 1.2rem; letter-spacing: 3px; color: var(--gold-light); margin-top: 10px;">
+            <p class="font-serif" style="font-size: 1.3rem; letter-spacing: 4px; color: var(--gold-light); margin-top: 12px;">
                 SE MARIENT
             </p>
             <div class="hero-date-badge">
-                <i class="fa-solid fa-calendar-heart" style="margin-right: 8px;"></i> Samedi 12 Septembre 2026
+                <i class="fa-solid fa-calendar-heart" style="color: var(--gold-main);"></i> Samedi 12 Septembre 2026
             </div>
 
             <!-- COMPTE À REBOURS -->
@@ -399,26 +430,26 @@
 
     <!-- 2. NOTRE HISTOIRE -->
     <section id="histoire">
-        <div class="section-tag reveal">Notre Amour</div>
+        <div class="section-tag reveal"><i class="fa-solid fa-heart"></i> Notre Amour</div>
         <h2 class="section-title reveal">Le Début de l'Aventure</h2>
         <div class="divider reveal"></div>
 
         <div class="story-container reveal">
-            <p class="font-serif" style="font-size: 1.25rem; font-style: italic; color: var(--gold-light); margin-bottom: 20px;">
-                "Deux âmes, un seul cœur et une promesse pour l'éternité."
+            <p class="font-serif" style="font-size: 1.35rem; font-style: italic; color: var(--gold-light); margin-bottom: 25px;">
+                "Deux âmes, un seul cœur et une promesse gravée pour l'éternité."
             </p>
-            <p style="color: var(--text-muted); margin-bottom: 15px;">
-                C'est avec une immense joie que nous vous invitons à célébrer le plus beau chapitre de notre histoire. Après tant de moments magiques partagés, nous scellerons notre union entourés des personnes qui nous sont les plus chères.
+            <p style="color: var(--text-muted); margin-bottom: 18px; font-size: 1.05rem;">
+                C'est avec une joie immense et un amour infini que nous vous invitons à célébrer le plus beau chapitre de notre vie. Après tant de moments magiques et de rires partagés, nous scellerons notre union entourés des personnes les plus précieuses à nos yeux.
             </p>
-            <p style="color: var(--text-muted);">
-                Votre présence à nos côtés rendra cette journée inoubliable.
+            <p style="color: var(--text-muted); font-size: 1.05rem;">
+                Votre présence honorera notre fête et illuminera cette journée inoubliable.
             </p>
         </div>
     </section>
 
-    <!-- 3. GALERIE PHOTOS -->
+    <!-- 3. GALERIE PHOTOS ROYALE -->
     <section id="photos">
-        <div class="section-tag reveal">Album Souvenir</div>
+        <div class="section-tag reveal"><i class="fa-solid fa-gem"></i> Album Souvenir</div>
         <h2 class="section-title reveal">Nos Moments Privilégiés</h2>
         <div class="divider reveal"></div>
 
@@ -430,9 +461,9 @@
         </div>
     </section>
 
-    <!-- 4. PROGRAMME -->
+    <!-- 4. PROGRAMME DE GALA -->
     <section id="programme">
-        <div class="section-tag reveal">Déroulement</div>
+        <div class="section-tag reveal"><i class="fa-solid fa-clock"></i> Déroulement</div>
         <h2 class="section-title reveal">Le Programme de la Journée</h2>
         <div class="divider reveal"></div>
 
@@ -440,34 +471,34 @@
             <div class="prog-card">
                 <i class="fa-solid fa-ring prog-icon"></i>
                 <div class="prog-time">15h00</div>
-                <h3 class="font-serif">Cérémonie Laïque</h3>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 8px;">Échange des vœux dans les magnifiques jardins du Domaine.</p>
+                <h3 class="font-serif" style="font-size: 1.35rem;">Cérémonie Laïque</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 10px;">Échange des vœux solennels dans les jardins du Domaine.</p>
             </div>
             <div class="prog-card">
                 <i class="fa-solid fa-champagne-glasses prog-icon"></i>
                 <div class="prog-time">17h30</div>
-                <h3 class="font-serif">Cocktail Dînatoire</h3>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 8px;">Rafraîchissements, ateliers gourmands et animation musicale live.</p>
+                <h3 class="font-serif" style="font-size: 1.35rem;">Cocktail Dînatoire</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 10px;">Rafraîchissements, animations gourmandes & musique d'ambiance.</p>
             </div>
             <div class="prog-card">
                 <i class="fa-solid fa-utensils prog-icon"></i>
                 <div class="prog-time">20h00</div>
-                <h3 class="font-serif">Dîner de Gala</h3>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 8px;">Repas gastronomique suivi de la soirée dansante VIP.</p>
+                <h3 class="font-serif" style="font-size: 1.35rem;">Dîner de Gala</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 10px;">Repas gastronomique d'exception suivi de la soirée dansante VIP.</p>
             </div>
         </div>
     </section>
 
     <!-- 5. RSVP SECTION -->
     <section class="rsvp-section">
-        <div class="section-tag reveal">Confirmation</div>
+        <div class="section-tag reveal"><i class="fa-solid fa-ticket-simple"></i> Confirmation</div>
         <h2 class="section-title reveal">Réservez Votre Accès VIP</h2>
         <div class="divider reveal"></div>
-        <p class="reveal" style="color: var(--text-muted); max-width: 500px; margin-bottom: 30px;">
-            Afin d'assurer le meilleur accueil à nos invités, merci de valider votre réservation en vérifiant votre nom dans la liste officielle.
+        <p class="reveal" style="color: var(--text-muted); max-width: 550px; margin-bottom: 35px; font-size: 1.05rem;">
+            Afin d'assurer le meilleur accueil à nos précieux invités, veuillez valider votre présence en vérifiant votre nom dans notre liste officielle.
         </p>
         <button class="btn-gold reveal" onclick="openModal()">
-            <i class="fa-solid fa-ticket"></i> Confirmer ma présence
+            <i class="fa-solid fa-heart"></i> Confirmer ma présence
         </button>
     </section>
 
@@ -475,28 +506,28 @@
     <div class="modal-overlay" id="rsvpModal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h3 class="font-serif" style="font-size: 1.6rem; color: var(--gold-light); margin-bottom: 5px;">Vérification d'Invitation</h3>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 25px;">Saisissez vos informations pour consulter votre table et réserver.</p>
+            <h3 class="font-serif" style="font-size: 1.8rem; color: var(--gold-light); margin-bottom: 6px;">Vérification d'Invitation</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 30px;">Saisissez vos informations pour consulter votre table et valider votre réservation.</p>
 
             <form id="rsvpForm" onsubmit="verifierInvite(event)">
                 <div class="form-group">
-                    <label><i class="fa-solid fa-user" style="margin-right: 6px;"></i>Nom</label>
+                    <label><i class="fa-solid fa-user" style="margin-right: 8px; color: var(--gold-main);"></i>Nom</label>
                     <input type="text" id="nom" class="form-control" placeholder="ex: KABAMBA" required>
                 </div>
                 <div class="form-group">
-                    <label><i class="fa-solid fa-user-tag" style="margin-right: 6px;"></i>Postnom</label>
+                    <label><i class="fa-solid fa-user-tag" style="margin-right: 8px; color: var(--gold-main);"></i>Postnom</label>
                     <input type="text" id="postnom" class="form-control" placeholder="ex: ILUNGA" required>
                 </div>
                 <div class="form-group">
-                    <label><i class="fa-solid fa-signature" style="margin-right: 6px;"></i>Prénom</label>
+                    <label><i class="fa-solid fa-signature" style="margin-right: 8px; color: var(--gold-main);"></i>Prénom</label>
                     <input type="text" id="prenom" class="form-control" placeholder="ex: Jean" required>
                 </div>
                 <div class="form-group">
-                    <label><i class="fa-solid fa-phone" style="margin-right: 6px;"></i>Numéro de Téléphone</label>
+                    <label><i class="fa-solid fa-phone" style="margin-right: 8px; color: var(--gold-main);"></i>Numéro de Téléphone</label>
                     <input type="tel" id="telephone" class="form-control" placeholder="ex: 0990000000" required>
                 </div>
                 <div class="form-group">
-                    <label><i class="fa-solid fa-heart" style="margin-right: 6px;"></i>Statut</label>
+                    <label><i class="fa-solid fa-heart" style="margin-right: 8px; color: var(--gold-main);"></i>Statut</label>
                     <div class="radio-group">
                         <label class="radio-label">
                             <input type="radio" name="statut" value="Célibataire" checked> Célibataire
@@ -507,7 +538,7 @@
                     </div>
                 </div>
 
-                <button type="submit" id="btnSubmit" class="btn-gold" style="width: 100%; margin-top: 15px; justify-content: center;">
+                <button type="submit" id="btnSubmit" class="btn-gold" style="width: 100%; margin-top: 20px; justify-content: center;">
                     Vérifier mon invitation
                 </button>
             </form>
@@ -518,12 +549,24 @@
 
     <!-- FOOTER -->
     <footer>
-        <p class="font-script" style="font-size: 2rem; margin-bottom: 5px;">Sarah &amp; Thomas</p>
-        <p>© 2026 - Invitation de Mariage VIP. Avec tout notre amour.</p>
+        <p class="font-script" style="font-size: 2.4rem; margin-bottom: 8px;">Sarah &amp; Thomas</p>
+        <p>© 2026 - Invitation de Mariage de Prestige VIP. Avec tout notre amour.</p>
     </footer>
 
     <!-- SCRIPT JS -->
     <script>
+        // Génération dynamique de cœurs volants dorés
+        const container = document.getElementById('hearts-container');
+        for (let i = 0; i < 20; i++) {
+            const heart = document.createElement('i');
+            heart.className = 'fa-solid fa-heart floating-heart';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 8 + 8) + 's';
+            heart.style.animationDelay = (Math.random() * 5) + 's';
+            heart.style.fontSize = (Math.random() * 1.2 + 0.6) + 'rem';
+            container.appendChild(heart);
+        }
+
         // Intersection Observer pour animations fluides au scroll
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -607,18 +650,18 @@
                 if (response.ok && data.success) {
                     resultBox.className = "result-box success";
                     resultBox.innerHTML = `
-                        <h3 class="font-serif" style="color:#34D399; font-size:1.4rem;">🎉 Accès VIP Confirmé</h3>
-                        <p style="margin-top:10px;">Enchanté(e) <strong>${data.guest.prenom} ${data.guest.nom}</strong> ! Votre place est réservée.</p>
-                        <hr style="border-color: rgba(255,255,255,0.1); margin: 15px 0;">
-                        <p>📍 Table attribuée : <strong>${data.guest.table}</strong></p>
-                        <p>🎟️ Places réservées : <strong>${data.guest.place}</strong></p>
+                        <h3 class="font-serif" style="color:#34D399; font-size:1.5rem;">🎉 Accès VIP Confirmé</h3>
+                        <p style="margin-top:10px; font-size:1.05rem;">Enchanté(e) <strong>${data.guest.prenom} ${data.guest.nom}</strong> ! Votre place est réservée.</p>
+                        <hr style="border-color: rgba(255,255,255,0.15); margin: 18px 0;">
+                        <p style="font-size:1.05rem;">📍 Table attribuée : <strong>${data.guest.table}</strong></p>
+                        <p style="font-size:1.05rem;">🎟️ Places réservées : <strong>${data.guest.place}</strong></p>
                     `;
                 } else {
                     resultBox.className = "result-box error";
                     resultBox.innerHTML = `
-                        <h3 class="font-serif" style="color:#FB7185; font-size:1.3rem;">❌ Accès Non Trouvé</h3>
-                        <p style="margin-top:10px; font-size:0.9rem;">${data.message}</p>
-                        <button class="btn-gold" style="padding: 10px 25px; font-size:0.85rem; margin-top:18px;" onclick="closeModal()">Réessayer</button>
+                        <h3 class="font-serif" style="color:#FB7185; font-size:1.4rem;">❌ Accès Non Trouvé</h3>
+                        <p style="margin-top:10px; font-size:0.95rem;">${data.message}</p>
+                        <button class="btn-gold" style="padding: 12px 30px; font-size:0.9rem; margin-top:20px;" onclick="closeModal()">Réessayer</button>
                     `;
                 }
             } catch (error) {
@@ -627,12 +670,12 @@
                 resultBox.style.display = 'block';
                 resultBox.className = "result-box error";
                 resultBox.innerHTML = `
-                    <h3 class="font-serif" style="color:#FB7185; font-size:1.3rem;">⚠️ Erreur de connexion</h3>
-                    <p style="margin-top:10px; font-size:0.9rem;">Impossible de se connecter au serveur backend.</p>
-                    <button class="btn-gold" style="padding: 10px 25px; font-size:0.85rem; margin-top:18px;" onclick="closeModal()">Réessayer</button>
+                    <h3 class="font-serif" style="color:#FB7185; font-size:1.4rem;">⚠️ Erreur de connexion</h3>
+                    <p style="margin-top:10px; font-size:0.95rem;">Impossible de se connecter au serveur backend.</p>
+                    <button class="btn-gold" style="padding: 12px 30px; font-size:0.9rem; margin-top:20px;" onclick="closeModal()">Réessayer</button>
                 `;
             } finally {
-                btnSubmit.innerHTML = `<i class="fa-solid fa-ticket"></i> Vérifier mon invitation`;
+                btnSubmit.innerHTML = `<i class="fa-solid fa-heart"></i> Vérifier mon invitation`;
                 btnSubmit.disabled = false;
             }
         }
