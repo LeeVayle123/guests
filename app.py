@@ -463,6 +463,16 @@ def verify_secret_code():
         conn.close()
 
         if guest:
+            if guest.get('secret_used'):
+                return jsonify({"success": False, "message": "Ce code secret a déjà été utilisé."}), 401
+
+            update_query = "UPDATE guests SET secret_used = TRUE WHERE id = %s"
+            cursor = conn.cursor()
+            cursor.execute(update_query, (guest['id'],))
+            conn.commit()
+            cursor.close()
+            conn.close()
+
             return jsonify({"success": True, "message": "Code secret valide ! Bienvenue.", "guest": {
                 "nom": guest['nom'],
                 "postnom": guest['postnom'],
@@ -524,6 +534,7 @@ def ensure_db_schema():
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("ALTER TABLE guests ADD COLUMN IF NOT EXISTS secret_code VARCHAR(255)")
+        cursor.execute("ALTER TABLE guests ADD COLUMN IF NOT EXISTS secret_used BOOLEAN DEFAULT FALSE")
         conn.commit()
         cursor.close()
         conn.close()

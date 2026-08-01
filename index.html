@@ -665,16 +665,20 @@
             </div>
 
             <form id="codeForm" onsubmit="validerCodeSecret(event)">
-                <div class="form-group">
-                    <label><i class="fa-solid fa-key" style="margin-right: 8px; color: var(--gold-main);"></i>Code Secret</label>
-                    <input type="text" id="secretCodeInput" class="form-control" placeholder="ex: VIP2026" style="text-align: center; font-size: 1.2rem; letter-spacing: 3px; font-weight: 700; text-transform: uppercase;" required>
+                <div style="display: flex; gap: 12px; align-items: flex-end; margin-bottom: 18px;">
+                    <div style="flex: 1;">
+                        <label style="display:block; margin-bottom:8px;"><i class="fa-solid fa-key" style="margin-right: 8px; color: var(--gold-main);"></i>Code Secret</label>
+                        <input type="text" id="secretCodeInput" class="form-control" placeholder="ex: VIP2026" style="width: 100%; text-align: center; font-size: 1.2rem; letter-spacing: 3px; font-weight: 700; text-transform: uppercase;" required>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <button type="button" class="btn-gold" style="background:#fff; color:#070b14; border:1px solid rgba(245, 158, 11, 0.4); min-width: 120px; padding: 14px;" onclick="closeCodeModal()">Annuler</button>
+                        <button type="submit" id="btnCheckCode" class="btn-gold" style="min-width: 160px; justify-content: center; padding: 14px;">
+                            <i class="fa-solid fa-envelope-open-text"></i> Déverrouiller
+                        </button>
+                    </div>
                 </div>
 
                 <div id="codeErrorBox" style="display: none; color: #fb7185; font-size: 0.85rem; text-align: center; margin-bottom: 15px; font-weight: 600;"></div>
-
-                <button type="submit" id="btnCheckCode" class="btn-gold" style="width: 100%; justify-content: center; padding: 14px;">
-                    <i class="fa-solid fa-envelope-open-text"></i> Déverrouiller l'Enveloppe
-                </button>
             </form>
         </div>
     </div>
