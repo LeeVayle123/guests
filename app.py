@@ -18,49 +18,63 @@ CORS(app)
 
 # Configuration sécurisée via variables d'environnement (Compatible Supabase / PostgreSQL)
 def get_db_connection():
-    db_url = os.environ.get('DATABASE_URL')
-    if db_url:
-        if 'sslmode=' not in db_url:
-            separator = '&' if '?' in db_url else '?'
-            db_url = f"{db_url}{separator}sslmode=require"
-        try:
-            return psycopg2.connect(
-                db_url,
-                connect_timeout=5,
-                cursor_factory=extras.RealDictCursor
-            )
-        except Exception as primary_err:
-            print(f"Connexion principale échouée ({primary_err}). Basculement automatique sur les régions Supabase Pooler IPv4...")
-            
-            # Détection et test automatique de toutes les régions Supabase Pooler IPv4
-            regions = [
-                'aws-0-eu-west-1',      # Irlande (très fréquent)
-                'aws-0-us-east-1',      # USA Est (très fréquent)
-                'aws-0-eu-west-3',      # Paris
-                'aws-0-eu-west-2',      # Londres
-                'aws-0-us-west-1',      # USA Ouest
-                'aws-0-ap-southeast-1', # Singapour
-                'aws-0-sa-east-1',      # Brésil
-                'aws-0-eu-central-1'    # Francfort
-            ]
-            
-            ref = 'diylsnwdppqtsktqyfsd'
-            pwd = 'vaylegueste123**41'
-            
-            for reg in regions:
-                candidate_url = f"postgresql://postgres.{ref}:{pwd}@{reg}.pooler.supabase.com:6543/postgres?sslmode=require"
-                try:
-                    conn = psycopg2.connect(
-                        candidate_url,
-                        connect_timeout=4,
-                        cursor_factory=extras.RealDictCursor
-                    )
-                    print(f"SUCCES : Connexion établie sur la région Supabase {reg} !")
-                    return conn
-                except Exception:
-                    continue
-            
-            raise primary_err
+    default_supabase_url = "postgresql://postgres:iniviation123@db.trkojmuhtjfhsiiujpeh.supabase.co:5432/postgres?sslmode=require"
+    db_url = os.environ.get('DATABASE_URL') or default_supabase_url
+
+    if 'sslmode=' not in db_url and 'localhost' not in db_url and '127.0.0.1' not in db_url:
+        separator = '&' if '?' in db_url else '?'
+        db_url = f"{db_url}{separator}sslmode=require"
+
+    try:
+        return psycopg2.connect(
+            db_url,
+            connect_timeout=8,
+            cursor_factory=extras.RealDictCursor
+        )
+    except Exception as primary_err:
+        print(f"Connexion directe échouée ({primary_err}). Basculement sur les poolers IPv4 Supabase...")
+        ref = "trkojmuhtjfhsiiujpeh"
+        pwd = "iniviation123"
+        pooler_regions = [
+            'aws-0-eu-west-1',      # Irlande
+            'aws-0-eu-west-3',      # Paris
+            'aws-0-eu-central-1',   # Francfort
+            'aws-0-us-east-1',      # USA Est
+            'aws-0-eu-west-2',      # Londres
+            'aws-0-us-west-1'       # USA Ouest
+        ]
+        for reg in pooler_regions:
+            candidate_url = f"postgresql://postgres.{ref}:{pwd}@{reg}.pooler.supabase.com:6543/postgres?sslmode=require"
+            try:
+                conn = psycopg2.connect(
+                    candidate_url,
+                    connect_timeout=4,
+                    cursor_factory=extras.RealDictCursor
+                )
+                print(f"SUCCES : Connexion établie sur la région {reg} !")
+                return conn
+            except Exception:
+                continue
+        raise primary_err
+
+
+
+    host = os.environ.get('DB_HOST', 'localhost')
+    user = os.environ.get('DB_USER', 'postgres')
+    password = os.environ.get('DB_PASSWORD', '')
+    database = os.environ.get('DB_NAME', 'invitation')
+    port = int(os.environ.get('DB_PORT', 5432))
+
+    return psycopg2.connect(
+        host=host,
+        user=user,
+        password=password,
+        dbname=database,
+        port=port,
+        connect_timeout=10,
+        cursor_factory=extras.RealDictCursor
+    )
+
 
 
 
