@@ -1,8 +1,13 @@
 import os
 from flask import Flask, request, render_template, jsonify, session
 from flask_cors import CORS
-import mysql.connector
+import psycopg2
+import psycopg2.extras as extras
 from flask import redirect, url_for
+from dotenv import load_dotenv
+
+# Chargement du fichier .env pour le développement local
+load_dotenv()
 
 # Configuration de Flask avec template a la racine
 base_dir = os.path.abspath(os.path.dirname(__file__))
@@ -11,22 +16,32 @@ app = Flask(__name__, template_folder=base_dir, static_folder=base_dir)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret')
 CORS(app)
 
-# Configuration sécurisée via variables d'environnement
+# Configuration sécurisée via variables d'environnement (Compatible Supabase / PostgreSQL)
 def get_db_connection():
+    db_url = os.environ.get('DATABASE_URL')
+    if db_url:
+        return psycopg2.connect(
+            db_url,
+            connect_timeout=10,
+            cursor_factory=extras.RealDictCursor
+        )
+
     host = os.environ.get('DB_HOST', 'localhost')
-    user = os.environ.get('DB_USER', 'root')
+    user = os.environ.get('DB_USER', 'postgres')
     password = os.environ.get('DB_PASSWORD', '')
     database = os.environ.get('DB_NAME', 'invitation')
-    port = int(os.environ.get('DB_PORT', 3306))
-    
-    return mysql.connector.connect(
+    port = int(os.environ.get('DB_PORT', 5432))
+
+    return psycopg2.connect(
         host=host,
         user=user,
         password=password,
-        database=database,
+        dbname=database,
         port=port,
-        connect_timeout=5
+        connect_timeout=10,
+        cursor_factory=extras.RealDictCursor
     )
+
 
 
 @app.route('/')
@@ -49,7 +64,7 @@ def verifiy_guest():
 
     try:
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
 
         # Recherche de l'invité
         query = """
@@ -282,7 +297,7 @@ def admin_assign_table():
 def admin_get_guests():
     try:
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         # join with tables to get table names if needed (guests.table_assignee stores name)
         cursor.execute("SELECT * FROM guests ORDER BY id DESC")
         rows = cursor.fetchall()
@@ -300,7 +315,7 @@ def admin_get_guests():
 def admin_get_tables():
     try:
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         cursor.execute("SELECT * FROM tables ORDER BY id")
         rows = cursor.fetchall()
         
@@ -322,7 +337,7 @@ def admin_get_tables():
             c_ins = conn.cursor()
             for name, cap, desc in default_tables:
                 try:
-                    c_ins.execute("INSERT IGNORE INTO tables (name, capacity, description) VALUES (%s, %s, %s)", (name, cap, desc))
+                    c_ins.execute("INSERT INTO tables (name, capacity, description) VALUES (%s, %s, %s) ON CONFLICT (name) DO NOTHING", (name, cap, desc))
                 except Exception as e:
                     print(f"Ignored table init error: {e}")
             conn.commit()
@@ -366,7 +381,7 @@ def admin_add_table():
 def admin_get_wishes():
     try:
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         cursor.execute("SELECT * FROM wishes ORDER BY created_at DESC")
         rows = cursor.fetchall()
         cursor.close()
@@ -434,7 +449,7 @@ def admin_metrics():
 def admin_confirmed():
     try:
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         cursor.execute("SELECT * FROM guests WHERE a_confirme = TRUE")
         confirmed = cursor.fetchall()
         count = len(confirmed)
@@ -456,7 +471,7 @@ def verify_secret_code():
 
     try:
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         cursor.execute("SELECT * FROM guests WHERE UPPER(secret_code) = %s", (code,))
         guest = cursor.fetchone()
 
@@ -496,7 +511,7 @@ def handle_public_wishes():
     if request.method == 'GET':
         try:
             conn = get_db_connection()
-            cursor = conn.cursor(dictionary=True)
+            cursor = conn.cursor()
             cursor.execute("SELECT * FROM wishes ORDER BY created_at DESC LIMIT 50")
             rows = cursor.fetchall()
             cursor.close()
