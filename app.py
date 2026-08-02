@@ -20,15 +20,48 @@ CORS(app)
 def get_db_connection():
     db_url = os.environ.get('DATABASE_URL')
     if db_url:
-        # Supabase exige une connexion SSL sécurisée
         if 'sslmode=' not in db_url:
             separator = '&' if '?' in db_url else '?'
             db_url = f"{db_url}{separator}sslmode=require"
-        return psycopg2.connect(
-            db_url,
-            connect_timeout=15,
-            cursor_factory=extras.RealDictCursor
-        )
+        try:
+            return psycopg2.connect(
+                db_url,
+                connect_timeout=5,
+                cursor_factory=extras.RealDictCursor
+            )
+        except Exception as primary_err:
+            print(f"Connexion principale échouée ({primary_err}). Basculement automatique sur les régions Supabase Pooler IPv4...")
+            
+            # Détection et test automatique de toutes les régions Supabase Pooler IPv4
+            regions = [
+                'aws-0-eu-west-1',      # Irlande (très fréquent)
+                'aws-0-us-east-1',      # USA Est (très fréquent)
+                'aws-0-eu-west-3',      # Paris
+                'aws-0-eu-west-2',      # Londres
+                'aws-0-us-west-1',      # USA Ouest
+                'aws-0-ap-southeast-1', # Singapour
+                'aws-0-sa-east-1',      # Brésil
+                'aws-0-eu-central-1'    # Francfort
+            ]
+            
+            ref = 'diylsnwdppqtsktqyfsd'
+            pwd = 'vaylegueste123**41'
+            
+            for reg in regions:
+                candidate_url = f"postgresql://postgres.{ref}:{pwd}@{reg}.pooler.supabase.com:6543/postgres?sslmode=require"
+                try:
+                    conn = psycopg2.connect(
+                        candidate_url,
+                        connect_timeout=4,
+                        cursor_factory=extras.RealDictCursor
+                    )
+                    print(f"SUCCES : Connexion établie sur la région Supabase {reg} !")
+                    return conn
+                except Exception:
+                    continue
+            
+            raise primary_err
+
 
 
     host = os.environ.get('DB_HOST', 'localhost')
