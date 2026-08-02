@@ -20,11 +20,16 @@ CORS(app)
 def get_db_connection():
     db_url = os.environ.get('DATABASE_URL')
     if db_url:
+        # Supabase exige une connexion SSL sécurisée
+        if 'sslmode=' not in db_url:
+            separator = '&' if '?' in db_url else '?'
+            db_url = f"{db_url}{separator}sslmode=require"
         return psycopg2.connect(
             db_url,
-            connect_timeout=10,
+            connect_timeout=15,
             cursor_factory=extras.RealDictCursor
         )
+
 
     host = os.environ.get('DB_HOST', 'localhost')
     user = os.environ.get('DB_USER', 'postgres')
